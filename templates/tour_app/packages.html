@@ -1,0 +1,79 @@
+{% extends 'tour_app/base.html' %}
+
+{% block content %}
+<section class="section packages-page">
+    <div class="container">
+        <div class="section-head centered">
+            <span class="eyebrow">All Packages</span>
+            <h2>Find your next escape</h2>
+        </div>
+
+        <div class="package-grid">
+            {% for package in packages %}
+                <article class="package-card">
+                    <div class="package-image">
+                        <img src="{{ package.image|default:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80' }}" alt="{{ package.title }}">
+                        <span class="badge">{{ package.country|default:package.destination.country }}</span>
+                    </div>
+                    <div class="package-content">
+                        <div class="destination-row">
+                            <span>{{ package.country|default:package.destination.country }}</span>
+                            <span class="duration">{{ package.duration }}</span>
+                        </div>
+                        <h3><a href="{% url 'package_detail' package.slug %}">{{ package.title }}</a></h3>
+                        <p class="package-summary">{{ package.summary|default:package.description|truncatewords:24 }}</p>
+                        <div class="price-row">
+                            <span class="price">{{ package.price }}</span>
+                            <a class="btn btn-small btn-primary" href="#booking">Book now</a>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <p>No travel packages are available yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section booking" id="booking">
+    <div class="container booking-panel">
+        <div class="booking-copy">
+            <span class="eyebrow">Plan your escape</span>
+            <h2>Tell us which destination inspires you</h2>
+            <p>Let our travel experts build a custom itinerary around your preferred pace, budget, and travel style.</p>
+        </div>
+        <form class="booking-form">
+            <div class="form-grid">
+                <label>
+                    <span>Full name</span>
+                    <input type="text" name="name" placeholder="Your name">
+                </label>
+                <label>
+                    <span>Email address</span>
+                    <input type="email" name="email" placeholder="you@example.com">
+                </label>
+                <label>
+                    <span>Destination</span>
+                    <select name="destination">
+                        <option>Bali Island Escape</option>
+                        <option>Swiss Alpine Journey</option>
+                        <option>Moroccan Heritage Tour</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Travelers</span>
+                    <select name="travelers">
+                        <option>1 traveler</option>
+                        <option>2 travelers</option>
+                        <option>3-5 travelers</option>
+                        <option>6+ travelers</option>
+                    </select>
+                </label>
+            </div>
+            <button class="btn btn-primary" type="button">Request itinerary</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

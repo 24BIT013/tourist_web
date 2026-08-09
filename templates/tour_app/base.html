@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Voyage Vista{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav-wrapper">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">✈</span>
+                <span>Voyage Vista</span>
+            </a>
+            <nav class="main-nav">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="#">Destinations</a>
+                <a class="active" href="{% url 'packages' %}">Packages</a>
+                <a href="#">Experiences</a>
+                <a href="#">Contact</a>
+            </nav>
+            <a class="btn btn-primary nav-btn" href="#booking">Plan a trip</a>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <a class="brand footer-brand" href="{% url 'home' %}">
+                    <span class="brand-icon">✈</span>
+                    <span>Voyage Vista</span>
+                </a>
+                <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">About us</a>
+                <a href="#">Travel guides</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Explore</h4>
+                <a href="#">Packages</a>
+                <a href="#">Destinations</a>
+                <a href="#">Experiences</a>
+            </div>
+            <div>
+                <h4>Newsletter</h4>
+                <div class="newsletter">
+                    <input type="email" placeholder="Email address">
+                    <button>Join</button>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>© 2026 Voyage Vista. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
