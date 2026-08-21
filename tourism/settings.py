@@ -7,6 +7,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'tourist-web-ucjt.onrender.com',
     'touristwebs.vercel.app',
+    # Allows Vercel's generated preview deployment subdomains.
+    '.vercel.app',
     'localhost',
     '127.0.0.1',
 ]
