@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Voyage Vista{% endblock %}</title>
+    <title>{% block title %}ZanAdventure{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -12,7 +12,7 @@
         <div class="container nav-wrapper">
             <a href="{% url 'home' %}" class="brand">
                 <span class="brand-icon">VV</span>
-                <span>Voyage Vista</span>
+                <span>ZanAdventure</span>
             </a>
             <nav class="main-nav">
                 <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
@@ -65,7 +65,7 @@
             <div>
                 <a class="brand footer-brand" href="{% url 'home' %}">
                     <span class="brand-icon">VV</span>
-                    <span>Voyage Vista</span>
+                    <span>ZanAdventure</span>
                 </a>
                 <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
             </div>
