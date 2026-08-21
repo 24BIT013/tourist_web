@@ -6,6 +6,7 @@ SECRET_KEY = 'django-insecure-tourism-site-secret-key'
 DEBUG = True
 ALLOWED_HOSTS = [
     'tourist-web-ucjt.onrender.com',
+    'touristwebs.vercel.app',
     'localhost',
     '127.0.0.1',
 ]
