@@ -1,45 +1,36 @@
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-from .models import TourPackage
+from .forms import BookingForm, PackageForm
+from .models import Booking, TourPackage
 
 
-def package_data():
-    return [
-        {
-            'title': 'Bali Island Escape',
-            'slug': 'bali-island-escape',
-            'image': 'https://images.unsplash.com/photo-1537996194471-e657df8fabcc?auto=format&fit=crop&q=80',
-            'country': 'Indonesia',
-            'duration': '5 Days / 4 Nights',
-            'price': '$649',
-            'summary': 'Chase islands, temples, beaches, and a slower rhythm of island life.',
-        },
-        {
-            'title': 'Swiss Alpine Journey',
-            'slug': 'swiss-alpine-journey',
-            'image': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80',
-            'country': 'Switzerland',
-            'duration': '7 Days / 6 Nights',
-            'price': '$1,299',
-            'summary': 'Glacier trails, lake towns, and alpine villages across classic Switzerland.',
-        },
-        {
-            'title': 'Moroccan Heritage Tour',
-            'slug': 'moroccan-heritage-tour',
-            'image': 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&q=80',
-            'country': 'Morocco',
-            'duration': '6 Days / 5 Nights',
-            'price': '$899',
-            'summary': 'Wander medinas, architecture, desert light, and vibrant local culture.',
-        },
-    ]
+def _booking_form(request, initial=None, redirect_url=None):
+    form = BookingForm(request.POST or None, initial=initial)
+
+    if request.method == 'POST' and form.is_valid():
+        booking = form.save()
+        package_label = booking.package_name or 'your selected package'
+        messages.success(
+            request,
+            f'Thanks {booking.guest_name}. Your booking request for {package_label} has been received.',
+        )
+        return form, redirect(f'{redirect_url}#booking')
+
+    return form, None
 
 
 def home(request):
-    packages = list(TourPackage.objects.all()[:3])
-    if not packages:
-        packages = package_data()
+    booking_form, booking_response = _booking_form(request, redirect_url=reverse('home'))
+    if booking_response:
+        return booking_response
 
+    packages = list(
+        TourPackage.objects.select_related('destination').order_by('-is_popular', '-created_at')[:3]
+    )
     stats = [
         {'label': 'Happy Travelers', 'value': '24K+'},
         {'label': 'Destinations', 'value': '48+'},
@@ -50,21 +41,103 @@ def home(request):
     context = {
         'packages': packages,
         'stats': stats,
+        'booking_form': booking_form,
+        'booking_packages': TourPackage.objects.order_by('title'),
+        'booking_action': reverse('home'),
     }
     return render(request, 'tour_app/index.html', context)
 
 
 def packages(request):
-    package_list = list(TourPackage.objects.all())
-    if not package_list:
-        package_list = package_data()
+    booking_form, booking_response = _booking_form(request, redirect_url=reverse('packages'))
+    if booking_response:
+        return booking_response
 
+    package_list = list(TourPackage.objects.select_related('destination').order_by('-is_popular', '-created_at'))
     context = {
         'packages': package_list,
+        'booking_form': booking_form,
+        'booking_packages': TourPackage.objects.order_by('title'),
+        'booking_action': reverse('packages'),
     }
     return render(request, 'tour_app/packages.html', context)
 
 
 def package_detail(request, slug):
-    package = get_object_or_404(TourPackage, slug=slug)
-    return render(request, 'tour_app/package_detail.html', {'package': package})
+    package = get_object_or_404(TourPackage.objects.select_related('destination'), slug=slug)
+    booking_form, booking_response = _booking_form(
+        request,
+        initial={'package': package.pk},
+        redirect_url=reverse('package_detail', kwargs={'slug': slug}),
+    )
+    if booking_response:
+        return booking_response
+
+    context = {
+        'package': package,
+        'booking_form': booking_form,
+        'booking_packages': TourPackage.objects.order_by('title'),
+        'booking_action': reverse('package_detail', kwargs={'slug': slug}),
+    }
+    return render(request, 'tour_app/package_detail.html', context)
+
+
+@staff_member_required
+def dashboard(request):
+    packages = TourPackage.objects.select_related('destination').annotate(
+        booking_count=Count('bookings')
+    ).order_by('-created_at')
+    bookings = Booking.objects.select_related('package').order_by('-created_at')
+
+    context = {
+        'packages': packages,
+        'bookings': bookings,
+        'stats': {
+            'packages': packages.count(),
+            'bookings': bookings.count(),
+            'pending': bookings.filter(status=Booking.Status.PENDING).count(),
+            'confirmed': bookings.filter(status=Booking.Status.CONFIRMED).count(),
+        },
+    }
+    return render(request, 'tour_app/dashboard.html', context)
+
+
+@staff_member_required
+def package_create(request):
+    return _package_form(request)
+
+
+@staff_member_required
+def package_edit(request, pk):
+    package = get_object_or_404(TourPackage, pk=pk)
+    return _package_form(request, package=package)
+
+
+def _package_form(request, package=None):
+    form = PackageForm(request.POST or None, instance=package)
+
+    if request.method == 'POST' and form.is_valid():
+        saved_package = form.save()
+        action = 'updated' if package else 'created'
+        messages.success(request, f'Package "{saved_package.title}" has been {action}.')
+        return redirect('dashboard')
+
+    context = {
+        'form': form,
+        'package': package,
+        'is_edit': package is not None,
+    }
+    return render(request, 'tour_app/package_form.html', context)
+
+
+@staff_member_required
+def package_delete(request, pk):
+    package = get_object_or_404(TourPackage, pk=pk)
+
+    if request.method == 'POST':
+        title = package.title
+        package.delete()
+        messages.success(request, f'Package "{title}" has been deleted.')
+        return redirect('dashboard')
+
+    return render(request, 'tour_app/package_confirm_delete.html', {'package': package})

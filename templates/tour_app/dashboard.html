@@ -1,0 +1,156 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Voyage Vista | Admin Dashboard{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-hero">
+    <div class="container dashboard-hero-grid">
+        <div>
+            <span class="eyebrow">Admin dashboard</span>
+            <h1>Manage packages and bookings from one place</h1>
+            <p>
+                Add, edit, and delete travel packages while tracking every customer booking request and their contact details.
+            </p>
+        </div>
+        <div class="dashboard-actions">
+            <a class="btn btn-primary" href="{% url 'package_create' %}">Add package</a>
+            <a class="btn btn-secondary" href="{% url 'packages' %}">View public site</a>
+        </div>
+    </div>
+</section>
+
+<section class="section dashboard-stats">
+    <div class="container dashboard-stat-grid">
+        <article class="stat-card">
+            <span>Packages</span>
+            <strong>{{ stats.packages }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Bookings</span>
+            <strong>{{ stats.bookings }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Pending</span>
+            <strong>{{ stats.pending }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Confirmed</span>
+            <strong>{{ stats.confirmed }}</strong>
+        </article>
+    </div>
+</section>
+
+<section class="section dashboard-lists">
+    <div class="container dashboard-panels">
+        <article class="dashboard-panel">
+            <div class="section-head split">
+                <div>
+                    <span class="eyebrow">Packages</span>
+                    <h2>Inventory</h2>
+                </div>
+                <a class="btn btn-ghost" href="{% url 'package_create' %}">Add package</a>
+            </div>
+
+            <div class="table-wrap">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Package</th>
+                            <th>Country</th>
+                            <th>Price</th>
+                            <th>Bookings</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for package in packages %}
+                            <tr>
+                                <td>
+                                    <strong>{{ package.title }}</strong>
+                                    <div class="muted">{{ package.slug }}</div>
+                                </td>
+                                <td>{{ package.country }}</td>
+                                <td>{{ package.price }}</td>
+                                <td>{{ package.booking_count }}</td>
+                                <td>
+                                    {% if package.is_popular %}
+                                        <span class="status-badge status-confirmed">Popular</span>
+                                    {% else %}
+                                        <span class="status-badge status-pending">Standard</span>
+                                    {% endif %}
+                                </td>
+                                <td class="table-actions">
+                                    <a href="{% url 'package_edit' package.pk %}">Edit</a>
+                                    <a href="{% url 'package_delete' package.pk %}">Delete</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="table-empty">No packages have been created yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="dashboard-panel">
+            <div class="section-head split">
+                <div>
+                    <span class="eyebrow">Bookings</span>
+                    <h2>Customer records</h2>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="dashboard-table bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Trip</th>
+                            <th>Dates</th>
+                            <th>Party</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>
+                                    <strong>{{ booking.guest_name }}</strong>
+                                    <div class="muted">{{ booking.country|default:"Unknown country" }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ booking.guest_email }}</div>
+                                    <div class="muted">{{ booking.guest_phone }}</div>
+                                    <div class="muted">{{ booking.whatsapp_number }}</div>
+                                </td>
+                                <td>{{ booking.package_name|default:booking.package.title|default:"-" }}</td>
+                                <td>
+                                    <div>{{ booking.start_date|default:"-" }}</div>
+                                    <div class="muted">{{ booking.return_date|default:"" }}</div>
+                                </td>
+                                <td>{{ booking.travelers }}</td>
+                                <td>{{ booking.get_contact_method_display }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                                </td>
+                                <td class="request-cell">{{ booking.special_requests|default:"-" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="table-empty">No bookings have been submitted yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

@@ -1,5 +1,7 @@
 {% extends 'tour_app/base.html' %}
 
+{% block title %}Voyage Vista | {{ package.title }}{% endblock %}
+
 {% block content %}
 <section class="section package-detail">
     <div class="container detail-layout">
@@ -16,22 +18,23 @@
             <p>{{ package.description|default:package.summary }}</p>
             <div class="highlight-list">
                 <div>
-                    <span class="icon-feature">✓</span>
+                    <span class="icon-feature">CP</span>
                     <span>Curated local itinerary</span>
                 </div>
                 <div>
-                    <span class="icon-feature">✓</span>
+                    <span class="icon-feature">FP</span>
                     <span>Flexible travel planning</span>
                 </div>
                 <div>
-                    <span class="icon-feature">✓</span>
+                    <span class="icon-feature">CE</span>
                     <span>Guided cultural experiences</span>
                 </div>
             </div>
-            <a class="btn btn-primary" href="#booking">Book this package</a>
+            <a class="btn btn-primary" href="{% url 'package_detail' package.slug %}#booking">Book this package</a>
         </div>
     </div>
 </section>
+
 <section class="section booking" id="booking">
     <div class="container booking-panel">
         <div class="booking-copy">
@@ -39,36 +42,7 @@
             <h2>Book {{ package.title }}</h2>
             <p>Share a few details and our coordinators will help shape your ideal visit.</p>
         </div>
-        <form class="booking-form">
-            <div class="form-grid">
-                <label>
-                    <span>Full name</span>
-                    <input type="text" name="name" placeholder="Your name">
-                </label>
-                <label>
-                    <span>Email address</span>
-                    <input type="email" name="email" placeholder="you@example.com">
-                </label>
-                <label>
-                    <span>Destination</span>
-                    <select name="destination">
-                        <option>{{ package.title }}</option>
-                        <option>Swiss Alpine Journey</option>
-                        <option>Moroccan Heritage Tour</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Travelers</span>
-                    <select name="travelers">
-                        <option>1 traveler</option>
-                        <option>2 travelers</option>
-                        <option>3-5 travelers</option>
-                        <option>6+ travelers</option>
-                    </select>
-                </label>
-            </div>
-            <button class="btn btn-primary" type="submit">Request itinerary</button>
-        </form>
+        {% include 'tour_app/includes/booking_form.html' %}
     </div>
 </section>
 {% endblock %}

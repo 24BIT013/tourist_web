@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class Destination(models.Model):
@@ -24,24 +25,47 @@ class TourPackage(models.Model):
     is_popular = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
 
 class Booking(models.Model):
-    STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('confirmed', 'Confirmed'),
-        ('cancelled', 'Cancelled'),
-    )
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        CONFIRMED = 'confirmed', 'Confirmed'
+        CANCELLED = 'cancelled', 'Cancelled'
+
+    class ContactMethod(models.TextChoices):
+        WHATSAPP = 'whatsapp', 'WhatsApp'
+        EMAIL = 'email', 'Email'
+        PHONE = 'phone', 'Phone Call'
 
     guest_name = models.CharField(max_length=120)
     guest_email = models.EmailField()
+    guest_phone = models.CharField(max_length=30, blank=True, default='')
+    whatsapp_number = models.CharField(max_length=30, blank=True, default='')
+    country = models.CharField(max_length=100, blank=True, default='')
     package = models.ForeignKey(TourPackage, on_delete=models.SET_NULL, null=True, blank=True, related_name='bookings')
+    package_name = models.CharField(max_length=150, blank=True, default='')
     travelers = models.PositiveIntegerField(default=1)
     start_date = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    return_date = models.DateField(null=True, blank=True)
+    contact_method = models.CharField(max_length=20, choices=ContactMethod.choices, default=ContactMethod.WHATSAPP)
+    special_requests = models.TextField(blank=True, default='')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if self.package:
+            self.package_name = self.package_name or self.package.title
+            self.country = self.country or self.package.country
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.guest_name} - {self.package or 'Tour'}"
+        package_label = self.package_name or (self.package.title if self.package else 'Tour')
+        return f"{self.guest_name} - {package_label}"

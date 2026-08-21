@@ -1,270 +1,190 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voyage Vista | Dream Travel Experiences</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-</head>
-<body>
-    <header class="topbar">
-        <div class="container nav-wrapper">
-            <a href="{% url 'home' %}" class="brand">
-                <span class="brand-icon">✈</span>
-                <span>Voyage Vista</span>
-            </a>
-            <nav class="main-nav">
-                <a class="active" href="{% url 'home' %}">Home</a>
-                <a href="#destinations">Destinations</a>
-                <a href="{% url 'packages' %}">Packages</a>
-                <a href="#experiences">Experiences</a>
-                <a href="#contact">Contact</a>
-            </nav>
-            <a class="btn btn-primary nav-btn" href="#booking">Plan a trip</a>
-        </div>
-    </header>
+{% extends 'tour_app/base.html' %}
 
-    <section class="hero">
-        <div class="container hero-grid">
-            <div class="hero-content">
-                <span class="eyebrow">Explore the world differently</span>
-                <h1>Find your next unforgettable adventure.</h1>
-                <p class="hero-copy">Discover curated journeys, local stories, beautiful stays, and moments that change the way you see the world.</p>
-                <div class="hero-actions">
-                    <a href="{% url 'packages' %}" class="btn btn-primary">Explore tours</a>
-                    <a href="#experiences" class="btn btn-secondary">How it works</a>
-                </div>
-                <div class="hero-proof">
-                    <div>
-                        <strong>24K+</strong>
-                        <span>happy travelers</span>
-                    </div>
-                    <div>
-                        <strong>48+</strong>
-                        <span>destinations</span>
-                    </div>
-                    <div>
-                        <strong>120</strong>
-                        <span>expert guides</span>
-                    </div>
-                </div>
+{% block title %}Voyage Vista | Dream Travel Experiences{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="eyebrow">Explore the world differently</span>
+            <h1>Find your next unforgettable adventure.</h1>
+            <p class="hero-copy">
+                Discover curated journeys, local stories, beautiful stays, and moments that change the way you see the world.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'packages' %}" class="btn btn-primary">Explore tours</a>
+                <a href="{% url 'home' %}#experiences" class="btn btn-secondary">How it works</a>
             </div>
-
-            <aside class="hero-panel">
-                <div class="hero-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80" alt="" class="hero-image">
-                    <div class="floating-card floating-card-one">
-                        <span class="icon">☀</span>
-                        <div>
-                            <p class="label">Summer Collection</p>
-                            <p class="value">Bali Island Escape</p>
-                        </div>
-                    </div>
-                    <div class="floating-card floating-card-two">
-                        <span class="icon">★</span>
-                        <div>
-                            <p class="label">Travel rating</p>
-                            <p class="value">4.9 / 5</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </section>
-
-    <section class="section services">
-        <div class="container">
-            <div class="section-head centered">
-                <span class="eyebrow">Our Promise</span>
-                <h2>Designed for every kind of traveler</h2>
-            </div>
-            <div class="feature-grid">
-                <article class="feature-card">
-                    <span class="icon-feature">🌍</span>
-                    <h3>Destination Planning</h3>
-                    <p>Pick the experiences that fit your dream travel style, budget, and dream pace.</p>
-                </article>
-                <article class="feature-card">
-                    <span class="icon-feature">🧳</span>
-                    <h3>Comfortable Journeys</h3>
-                    <p>Enjoy handpicked stays, transfers, scenic routes, and stress-free travel logistics.</p>
-                </article>
-                <article class="feature-card">
-                    <span class="icon-feature">🧭</span>
-                    <h3>Local Experiences</h3>
-                    <p>Meet guides, discover culture, taste food, and create authentic travel stories.</p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section class="section packages-section" id="packages">
-        <div class="container">
-            <div class="section-head split">
+            <div class="hero-proof">
                 <div>
-                    <span class="eyebrow">Trending Packages</span>
-                    <h2>Explore handpicked journeys</h2>
+                    <strong>24K+</strong>
+                    <span>happy travelers</span>
                 </div>
-                <a class="btn btn-ghost" href="{% url 'packages' %}">View all packages</a>
-            </div>
-
-            <div class="package-grid">
-                {% for package in packages %}
-                    <article class="package-card">
-                        <div class="package-image">
-                            <img src="{{ package.image }}" alt="{{ package.title }}">
-                            <span class="badge">{{ package.country }}</span>
-                        </div>
-                        <div class="package-content">
-                            <div class="destination-row">
-                                <span>{{ package.country }}</span>
-                                <span class="duration">{{ package.duration }}</span>
-                            </div>
-                            <h3><a href="{% url 'package_detail' package.slug %}">{{ package.title }}</a></h3>
-                            <p class="package-summary">{{ package.summary|default:"A memorable journey designed for discovery, learning, and relaxation." }}</p>
-                            <div class="price-row">
-                                <span class="price">{{ package.price }}</span>
-                                <a class="btn btn-small btn-primary" href="#booking">Book now</a>
-                            </div>
-                        </div>
-                    </article>
-                {% empty %}
-                    <div class="empty-state">
-                        <p>No packages are available yet. Please check back soon.</p>
-                    </div>
-                {% endfor %}
+                <div>
+                    <strong>48+</strong>
+                    <span>destinations</span>
+                </div>
+                <div>
+                    <strong>120</strong>
+                    <span>expert guides</span>
+                </div>
             </div>
         </div>
-    </section>
 
-    <section class="section stats-band">
-        <div class="container stat-grid">
-            {% for stat in stats %}
-                <article class="stat-item">
-                    <span class="stat-value">{{ stat.value }}</span>
-                    <span class="stat-label">{{ stat.label }}</span>
+        <aside class="hero-panel">
+            <div class="hero-image-wrap">
+                <img
+                    src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80"
+                    alt="Mountain landscape travel inspiration"
+                    class="hero-image"
+                >
+                <div class="floating-card floating-card-one">
+                    <span class="icon">SKY</span>
+                    <div>
+                        <p class="label">Summer collection</p>
+                        <p class="value">Bali Island Escape</p>
+                    </div>
+                </div>
+                <div class="floating-card floating-card-two">
+                    <span class="icon">4.9</span>
+                    <div>
+                        <p class="label">Travel rating</p>
+                        <p class="value">Guest favorite</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<section class="section services">
+    <div class="container">
+        <div class="section-head centered">
+            <span class="eyebrow">Our promise</span>
+            <h2>Designed for every kind of traveler</h2>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="icon-feature">DP</span>
+                <h3>Destination planning</h3>
+                <p>Pick the experiences that fit your dream travel style, budget, and pace.</p>
+            </article>
+            <article class="feature-card">
+                <span class="icon-feature">CJ</span>
+                <h3>Comfortable journeys</h3>
+                <p>Enjoy handpicked stays, transfers, scenic routes, and stress-free logistics.</p>
+            </article>
+            <article class="feature-card">
+                <span class="icon-feature">LE</span>
+                <h3>Local experiences</h3>
+                <p>Meet guides, discover culture, taste food, and create authentic travel stories.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section packages-section" id="packages">
+    <div class="container">
+        <div class="section-head split">
+            <div>
+                <span class="eyebrow">Trending packages</span>
+                <h2>Explore handpicked journeys</h2>
+            </div>
+            <a class="btn btn-ghost" href="{% url 'packages' %}">View all packages</a>
+        </div>
+
+        <div class="package-grid">
+            {% for package in packages %}
+                <article class="package-card">
+                    <div class="package-image">
+                        <img src="{{ package.image|default:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80' }}" alt="{{ package.title }}">
+                        <span class="badge">{{ package.country }}</span>
+                    </div>
+                    <div class="package-content">
+                        <div class="destination-row">
+                            <span>{{ package.country }}</span>
+                            <span class="duration">{{ package.duration }}</span>
+                        </div>
+                        <h3><a href="{% url 'package_detail' package.slug %}">{{ package.title }}</a></h3>
+                        <p class="package-summary">
+                            {{ package.summary|default:"A memorable journey designed for discovery, learning, and relaxation." }}
+                        </p>
+                        <div class="price-row">
+                            <span class="price">{{ package.price }}</span>
+                            <a class="btn btn-small btn-primary" href="{% url 'package_detail' package.slug %}#booking">Book now</a>
+                        </div>
+                    </div>
                 </article>
+            {% empty %}
+                <div class="empty-state">
+                    <p>No packages are available yet. Please add one from the dashboard.</p>
+                </div>
             {% endfor %}
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section experience" id="experiences">
-        <div class="container experience-grid">
-            <div>
-                <span class="eyebrow">How we travel</span>
-                <h2>From inspiration to unforgettable memories</h2>
-                <div class="process-list">
-                    <div class="process-step">
-                        <span>01</span>
-                        <div>
-                            <h3>Choose your journey</h3>
-                            <p>Browse destinations and experiences that align with your pace and preferences.</p>
-                        </div>
-                    </div>
-                    <div class="process-step">
-                        <span>02</span>
-                        <div>
-                            <h3>Plan with experts</h3>
-                            <p>We design a practical itinerary with accommodations, activities, and support.</p>
-                        </div>
-                    </div>
-                    <div class="process-step">
-                        <span>03</span>
-                        <div>
-                            <h3>Enjoy the experience</h3>
-                            <p>Travel with clarity, flexibility, and everything needed for a beautiful adventure.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="image-stack">
-                <img class="main-image" src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&q=80" alt="">
-                <div class="mini-card">
-                    <span class="icon-feature">✓</span>
+<section class="section stats-band">
+    <div class="container stat-grid">
+        {% for stat in stats %}
+            <article class="stat-item">
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section experience" id="experiences">
+    <div class="container experience-grid">
+        <div>
+            <span class="eyebrow">How we travel</span>
+            <h2>From inspiration to unforgettable memories</h2>
+            <div class="process-list">
+                <div class="process-step">
+                    <span>01</span>
                     <div>
-                        <span class="mini-title">Live Support</span>
-                        <span class="mini-subtitle">24/7 travel assistance</span>
+                        <h3>Choose your journey</h3>
+                        <p>Browse destinations and experiences that align with your pace and preferences.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <span>02</span>
+                    <div>
+                        <h3>Plan with experts</h3>
+                        <p>We design a practical itinerary with accommodations, activities, and support.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <span>03</span>
+                    <div>
+                        <h3>Enjoy the experience</h3>
+                        <p>Travel with clarity, flexibility, and everything needed for a beautiful adventure.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="section booking" id="booking">
-        <div class="container booking-panel">
-            <div class="booking-copy">
-                <span class="eyebrow">Plan your escape</span>
-                <h2>Tell us where you want to go</h2>
-                <p>Connect with our travel team and let us shape a journey around your idea of the perfect trip.</p>
-            </div>
-            <form class="booking-form">
-                <div class="form-grid">
-                    <label>
-                        <span>Full name</span>
-                        <input type="text" name="name" placeholder="Your name">
-                    </label>
-                    <label>
-                        <span>Email address</span>
-                        <input type="email" name="email" placeholder="you@example.com">
-                    </label>
-                    <label>
-                        <span>Destination</span>
-                        <select name="destination">
-                            <option>Bali Island Escape</option>
-                            <option>Swiss Alpine Journey</option>
-                            <option>Moroccan Heritage Tour</option>
-                        </select>
-                    </label>
-                    <label>
-                        <span>Travelers</span>
-                        <select name="travelers">
-                            <option>1 traveler</option>
-                            <option>2 travelers</option>
-                            <option>3-5 travelers</option>
-                            <option>6+ travelers</option>
-                        </select>
-                    </label>
-                </div>
-                <button class="btn btn-primary" type="submit">Request itinerary</button>
-            </form>
-        </div>
-    </section>
-
-    <footer class="footer" id="contact">
-        <div class="container footer-grid">
-            <div>
-                <a class="brand footer-brand" href="{% url 'home' %}">
-                    <span class="brand-icon">✈</span>
-                    <span>Voyage Vista</span>
-                </a>
-                <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
-            </div>
-            <div>
-                <h4>Company</h4>
-                <a href="#">About us</a>
-                <a href="#">Travel guides</a>
-                <a href="#">Careers</a>
-            </div>
-            <div>
-                <h4>Explore</h4>
-                <a href="#packages">Packages</a>
-                <a href="#destinations">Destinations</a>
-                <a href="#experiences">Experiences</a>
-            </div>
-            <div>
-                <h4>Newsletter</h4>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email address">
-                    <button>Join</button>
+        <div class="image-stack">
+            <img class="main-image" src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&q=80" alt="Travel planning and adventure">
+            <div class="mini-card">
+                <span class="icon-feature">LS</span>
+                <div>
+                    <span class="mini-title">Live support</span>
+                    <span class="mini-subtitle">24/7 travel assistance</span>
                 </div>
             </div>
         </div>
-        <div class="container footer-bottom">
-            <span>© 2026 Voyage Vista. All rights reserved.</span>
-        </div>
-    </footer>
+    </div>
+</section>
 
-    <script src="{% static 'js/app.js' %}"></script>
-</body>
-</html>
+<section class="section booking" id="booking">
+    <div class="container booking-panel">
+        <div class="booking-copy">
+            <span class="eyebrow">Plan your escape</span>
+            <h2>Tell us where you want to go</h2>
+            <p>Connect with our travel team and let us shape a journey around your idea of the perfect trip.</p>
+        </div>
+        {% include 'tour_app/includes/booking_form.html' %}
+    </div>
+</section>
+{% endblock %}

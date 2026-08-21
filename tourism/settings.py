@@ -38,6 +38,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'tour_app.context_processors.site_settings',
             ],
         },
     },
@@ -67,5 +68,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Replace this placeholder with your business WhatsApp number in international format.
+WHATSAPP_PHONE_NUMBER = '254700000000'
+WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

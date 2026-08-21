@@ -1,0 +1,102 @@
+<form class="booking-form" method="post" action="{{ booking_action }}">
+    {% csrf_token %}
+
+    {% if booking_form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in booking_form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="form-grid">
+        <label class="form-field">
+            <span>Full name</span>
+            {{ booking_form.guest_name }}
+            {% for error in booking_form.guest_name.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Email address</span>
+            {{ booking_form.guest_email }}
+            {% for error in booking_form.guest_email.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Phone number</span>
+            {{ booking_form.guest_phone }}
+            {% for error in booking_form.guest_phone.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>WhatsApp number</span>
+            {{ booking_form.whatsapp_number }}
+            {% for error in booking_form.whatsapp_number.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Package</span>
+            {{ booking_form.package }}
+            {% for error in booking_form.package.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Travelers</span>
+            {{ booking_form.travelers }}
+            {% for error in booking_form.travelers.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Start date</span>
+            {{ booking_form.start_date }}
+            {% for error in booking_form.start_date.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Return date</span>
+            {{ booking_form.return_date }}
+            {% for error in booking_form.return_date.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Preferred contact</span>
+            {{ booking_form.contact_method }}
+            {% for error in booking_form.contact_method.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field form-wide">
+            <span>Special requests</span>
+            {{ booking_form.special_requests }}
+            {% for error in booking_form.special_requests.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+    </div>
+
+    <div class="booking-form-footer">
+        {% if booking_packages %}
+            <button class="btn btn-primary" type="submit">Request itinerary</button>
+        {% else %}
+            <button class="btn btn-primary" type="submit" disabled>Request itinerary</button>
+            <p class="booking-note">Add a package in the dashboard before accepting bookings.</p>
+        {% endif %}
+    </div>
+</form>

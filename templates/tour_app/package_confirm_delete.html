@@ -1,0 +1,22 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Voyage Vista | Delete Package{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section">
+    <div class="container delete-panel">
+        <span class="eyebrow">Delete package</span>
+        <h1>Delete "{{ package.title }}"?</h1>
+        <p>
+            This will remove the package from the public site. Existing bookings keep their saved package snapshot for record keeping.
+        </p>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">Delete package</button>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

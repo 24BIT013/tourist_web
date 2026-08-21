@@ -1,0 +1,98 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Voyage Vista | {% if is_edit %}Edit Package{% else %}Add Package{% endif %}{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section">
+    <div class="container dashboard-form-grid">
+        <article class="dashboard-panel form-panel">
+            <span class="eyebrow">{% if is_edit %}Edit package{% else %}Add package{% endif %}</span>
+            <h1>{% if is_edit %}Update {{ package.title }}{% else %}Create a new travel package{% endif %}</h1>
+            <p>
+                Fill in the package details below. Leave the slug blank and it will be generated from the title automatically.
+            </p>
+
+            <form class="dashboard-form" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-grid form-grid-dashboard">
+                    <label class="form-field">
+                        <span>Title</span>
+                        {{ form.title }}
+                        {% for error in form.title.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Slug</span>
+                        {{ form.slug }}
+                        {% for error in form.slug.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Destination</span>
+                        {{ form.destination }}
+                        {% for error in form.destination.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Country</span>
+                        {{ form.country }}
+                        {% for error in form.country.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Duration</span>
+                        {{ form.duration }}
+                        {% for error in form.duration.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Price</span>
+                        {{ form.price }}
+                        {% for error in form.price.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field form-wide">
+                        <span>Summary</span>
+                        {{ form.summary }}
+                        {% for error in form.summary.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field form-wide">
+                        <span>Description</span>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field form-wide">
+                        <span>Image URL</span>
+                        {{ form.image }}
+                        {% for error in form.image.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field checkbox-field form-wide">
+                        {{ form.is_popular }}
+                        <span>Feature this package as popular</span>
+                        {% for error in form.is_popular.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">Save package</button>
+                    <a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a>
+                </div>
+            </form>
+        </article>
+
+        <aside class="dashboard-panel form-help">
+            <span class="eyebrow">Tips</span>
+            <h2>Keep the package clear and bookable</h2>
+            <ul class="help-list">
+                <li>Use a short title and a readable price format like <code>$1,250</code>.</li>
+                <li>Leave slug blank if you want it generated automatically.</li>
+                <li>Make sure the image URL points to a public image.</li>
+                <li>Mark only a few packages as popular to keep the homepage focused.</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+{% endblock %}

@@ -1,21 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const nav = document.querySelector('.main-nav');
-    if (nav) {
-        nav.querySelectorAll('a').forEach((link) => {
-            link.addEventListener('click', () => {
-                nav.querySelectorAll('a').forEach((item) => item.classList.toggle('active', item === link));
-            });
-        });
-    }
+    const whatsappWidget = document.querySelector('[data-whatsapp-widget]');
+    if (whatsappWidget) {
+        const toggleButton = whatsappWidget.querySelector('.whatsapp-fab');
+        const panel = whatsappWidget.querySelector('.whatsapp-panel');
 
-    const bookingForm = document.querySelector('.booking-form');
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const button = bookingForm.querySelector('button');
-            if (button) {
-                button.textContent = 'Request sent';
-                button.disabled = true;
+        const setOpenState = (isOpen) => {
+            whatsappWidget.classList.toggle('is-open', isOpen);
+            toggleButton.setAttribute('aria-expanded', String(isOpen));
+            panel.hidden = !isOpen;
+        };
+
+        setOpenState(false);
+
+        toggleButton.addEventListener('click', () => {
+            setOpenState(!whatsappWidget.classList.contains('is-open'));
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!whatsappWidget.contains(event.target)) {
+                setOpenState(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                setOpenState(false);
             }
         });
     }

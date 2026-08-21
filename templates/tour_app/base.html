@@ -7,57 +7,91 @@
     <title>{% block title %}Voyage Vista{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <header class="topbar">
         <div class="container nav-wrapper">
             <a href="{% url 'home' %}" class="brand">
-                <span class="brand-icon">✈</span>
+                <span class="brand-icon">VV</span>
                 <span>Voyage Vista</span>
             </a>
             <nav class="main-nav">
-                <a href="{% url 'home' %}">Home</a>
-                <a href="#">Destinations</a>
-                <a class="active" href="{% url 'packages' %}">Packages</a>
-                <a href="#">Experiences</a>
-                <a href="#">Contact</a>
+                <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}">Packages</a>
+                <a href="{% url 'home' %}#booking">Book a trip</a>
+                <a href="{% url 'home' %}#contact">Contact</a>
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
             </nav>
-            <a class="btn btn-primary nav-btn" href="#booking">Plan a trip</a>
+            <a class="btn btn-primary nav-btn" href="{% url 'home' %}#booking">Plan a trip</a>
         </div>
     </header>
 
+    {% if messages %}
+        <div class="container message-stack">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
 
-    <footer class="footer">
+    <div
+        class="whatsapp-widget"
+        data-whatsapp-widget
+        data-whatsapp-phone="{{ whatsapp_phone_number }}"
+        data-whatsapp-message="{{ whatsapp_default_message }}"
+    >
+        <button class="whatsapp-fab" type="button" aria-expanded="false">
+            <span class="whatsapp-fab-badge">WA</span>
+            <span class="whatsapp-fab-text">WhatsApp chat</span>
+        </button>
+        <div class="whatsapp-panel" hidden>
+            <p>Need help planning a trip? Chat with us on WhatsApp and we will reply quickly.</p>
+            <a
+                class="btn btn-primary"
+                target="_blank"
+                rel="noopener"
+                href="https://wa.me/{{ whatsapp_phone_number }}?text={{ whatsapp_default_message|urlencode }}"
+            >
+                Start chat
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer" id="contact">
         <div class="container footer-grid">
             <div>
                 <a class="brand footer-brand" href="{% url 'home' %}">
-                    <span class="brand-icon">✈</span>
+                    <span class="brand-icon">VV</span>
                     <span>Voyage Vista</span>
                 </a>
                 <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
             </div>
             <div>
                 <h4>Company</h4>
-                <a href="#">About us</a>
-                <a href="#">Travel guides</a>
-                <a href="#">Careers</a>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'packages' %}">Packages</a>
+                <a href="{% url 'home' %}#booking">Booking</a>
             </div>
             <div>
                 <h4>Explore</h4>
-                <a href="#">Packages</a>
-                <a href="#">Destinations</a>
-                <a href="#">Experiences</a>
+                <a href="{% url 'packages' %}">All packages</a>
+                <a href="{% url 'home' %}#experiences">Experiences</a>
+                <a href="{% url 'home' %}#contact">Contact</a>
             </div>
             <div>
-                <h4>Newsletter</h4>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email address">
-                    <button>Join</button>
-                </div>
+                <h4>Support</h4>
+                <a href="{% url 'home' %}#booking">Plan a trip</a>
+                <a href="https://wa.me/{{ whatsapp_phone_number }}?text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
             </div>
         </div>
         <div class="container footer-bottom">
-            <span>© 2026 Voyage Vista. All rights reserved.</span>
+            <span>Copyright 2026 Voyage Vista. All rights reserved.</span>
         </div>
     </footer>
 
