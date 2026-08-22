@@ -82,8 +82,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Serve the assets collected during deployment when running behind Gunicorn.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Replace this placeholder with your business WhatsApp number in international format.
-WHATSAPP_PHONE_NUMBER = '254700000000'
+WHATSAPP_PHONE_NUMBER = '255612001424'
 WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
+
+# Configure EMAIL_HOST_PASSWORD with a Gmail app password in production.
+BOOKING_NOTIFICATION_EMAIL = 'wordoxw@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', BOOKING_NOTIFICATION_EMAIL)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

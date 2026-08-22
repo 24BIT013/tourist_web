@@ -1,5 +1,9 @@
+from urllib.parse import urlencode
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import send_mail
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -8,17 +12,47 @@ from .forms import BookingForm, PackageForm
 from .models import Booking, TourPackage
 
 
+def _booking_summary(booking):
+    return '\n'.join([
+        'New booking request',
+        f'Name: {booking.guest_name}',
+        f'Email: {booking.guest_email}',
+        f'Phone: {booking.guest_phone or "Not provided"}',
+        f'WhatsApp: {booking.whatsapp_number or "Not provided"}',
+        f'Package: {booking.package_name or "Not selected"}',
+        f'Country: {booking.country or "Not provided"}',
+        f'Travelers: {booking.travelers}',
+        f'Start date: {booking.start_date or "Not provided"}',
+        f'Return date: {booking.return_date or "Not provided"}',
+        f'Preferred contact: {booking.get_contact_method_display()}',
+        f'Special requests: {booking.special_requests or "None"}',
+    ])
+
+
+def _whatsapp_booking_url(summary):
+    phone_number = ''.join(ch for ch in settings.WHATSAPP_PHONE_NUMBER if ch.isdigit())
+    return f'https://wa.me/{phone_number}?{urlencode({"text": summary})}'
+
+
 def _booking_form(request, initial=None, redirect_url=None):
     form = BookingForm(request.POST or None, initial=initial)
 
     if request.method == 'POST' and form.is_valid():
         booking = form.save()
         package_label = booking.package_name or 'your selected package'
+        summary = _booking_summary(booking)
+        send_mail(
+            subject=f'New booking request: {package_label}',
+            message=summary,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.BOOKING_NOTIFICATION_EMAIL],
+            fail_silently=True,
+        )
         messages.success(
             request,
-            f'Thanks {booking.guest_name}. Your booking request for {package_label} has been received.',
+            f'Thanks {booking.guest_name}. Opening WhatsApp to send your booking request.',
         )
-        return form, redirect(f'{redirect_url}#booking')
+        return form, redirect(_whatsapp_booking_url(summary))
 
     return form, None
 
