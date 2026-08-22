@@ -47,3 +47,25 @@ class BookingNotificationTests(TestCase):
         mock_send_mail.assert_called_once()
         self.assertEqual(mock_send_mail.call_args.kwargs['recipient_list'], ['wordoxw@gmail.com'])
         self.assertIn('Airport pickup', mock_send_mail.call_args.kwargs['message'])
+
+    @patch('tour_app.views.send_mail', side_effect=ConnectionError('SMTP unavailable'))
+    @override_settings(
+        MIDDLEWARE=[
+            middleware
+            for middleware in settings.MIDDLEWARE
+            if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
+        ]
+    )
+    def test_booking_still_opens_whatsapp_when_email_delivery_fails(self, mock_send_mail):
+        with self.assertLogs('tour_app.views', level='ERROR'):
+            response = self.client.post(reverse('home'), {
+                'guest_name': 'Amina Ali',
+                'guest_email': 'amina@example.com',
+                'package': self.package.pk,
+                'travelers': 2,
+                'contact_method': 'whatsapp',
+            })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('https://wa.me/255612001424?'))
+        mock_send_mail.assert_called_once()

@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -10,6 +11,9 @@ from django.urls import reverse
 
 from .forms import BookingForm, PackageForm
 from .models import Booking, TourPackage
+
+
+logger = logging.getLogger(__name__)
 
 
 def _booking_summary(booking):
@@ -30,8 +34,21 @@ def _booking_summary(booking):
 
 
 def _whatsapp_booking_url(summary):
-    phone_number = ''.join(ch for ch in settings.WHATSAPP_PHONE_NUMBER if ch.isdigit())
+    phone_number = ''.join(ch for ch in str(settings.WHATSAPP_PHONE_NUMBER) if ch.isdigit())
     return f'https://wa.me/{phone_number}?{urlencode({"text": summary})}'
+
+
+def _send_booking_notification(package_label, summary):
+    try:
+        send_mail(
+            subject=f'New booking request: {package_label}',
+            message=summary,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.BOOKING_NOTIFICATION_EMAIL],
+            fail_silently=False,
+        )
+    except Exception:
+        logger.exception('Unable to send booking notification email.')
 
 
 def _booking_form(request, initial=None, redirect_url=None):
@@ -41,13 +58,7 @@ def _booking_form(request, initial=None, redirect_url=None):
         booking = form.save()
         package_label = booking.package_name or 'your selected package'
         summary = _booking_summary(booking)
-        send_mail(
-            subject=f'New booking request: {package_label}',
-            message=summary,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.BOOKING_NOTIFICATION_EMAIL],
-            fail_silently=True,
-        )
+        _send_booking_notification(package_label, summary)
         messages.success(
             request,
             f'Thanks {booking.guest_name}. Opening WhatsApp to send your booking request.',
