@@ -85,8 +85,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHATSAPP_PHONE_NUMBER = '255612001424'
 WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
 
-# Configure EMAIL_HOST_PASSWORD with a Gmail app password in production.
-BOOKING_NOTIFICATION_EMAIL = 'wordoxw@gmail.com'
+# Booking submissions are sent to this mailbox. Configure EMAIL_HOST_PASSWORD
+# in Render with a Gmail App Password for this account so Gmail accepts SMTP
+# delivery (a normal Gmail password will not work).
+BOOKING_NOTIFICATION_EMAIL = os.environ.get(
+    'BOOKING_NOTIFICATION_EMAIL', 'wordoxw@gmail.com'
+)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))

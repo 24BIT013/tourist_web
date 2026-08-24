@@ -3,4 +3,7 @@ services:
     name: tourist-web
     runtime: python
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: gunicorn tourism.wsgi:application
+    # Apply the Booking migrations before serving requests.  Without this,
+    # a newly deployed database can be missing the booking columns and a
+    # booking submission fails with HTTP 500.
+    startCommand: python manage.py migrate --noinput && gunicorn tourism.wsgi:application
