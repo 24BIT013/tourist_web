@@ -53,7 +53,7 @@
                 class="btn btn-primary"
                 target="_blank"
                 rel="noopener"
-                href="https://wa.me/{{ whatsapp_phone_number }}?text={{ whatsapp_default_message|urlencode }}"
+                href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}"
             >
                 Start chat
             </a>
@@ -84,7 +84,7 @@
             <div>
                 <h4>Support</h4>
                 <a href="{% url 'home' %}#booking">Plan a trip</a>
-                <a href="https://wa.me/{{ whatsapp_phone_number }}?text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+                <a href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}

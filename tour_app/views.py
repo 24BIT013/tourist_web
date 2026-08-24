@@ -35,7 +35,9 @@ def _booking_summary(booking):
 
 def _whatsapp_booking_url(summary):
     phone_number = ''.join(ch for ch in str(settings.WHATSAPP_PHONE_NUMBER) if ch.isdigit())
-    return f'https://wa.me/{phone_number}?{urlencode({"text": summary})}'
+    # Use WhatsApp's API domain instead of wa.me. Some networks and browsers
+    # reject wa.me because of its HSTS certificate policy.
+    return f'https://api.whatsapp.com/send?{urlencode({"phone": phone_number, "text": summary})}'
 
 
 def _send_booking_notification(booking, package_label):

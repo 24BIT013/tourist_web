@@ -42,7 +42,7 @@ class BookingNotificationTests(TestCase):
         })
 
         self.assertRedirects(response, response.url, fetch_redirect_response=False)
-        self.assertTrue(response.url.startswith('https://wa.me/255612001424?'))
+        self.assertTrue(response.url.startswith('https://api.whatsapp.com/send?'))
         self.assertIn('Amina+Ali', response.url)
         self.assertIn('Zanzibar+Escape', response.url)
         mock_urlopen.assert_called_once()
@@ -73,5 +73,5 @@ class BookingNotificationTests(TestCase):
             })
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith('https://wa.me/255612001424?'))
+        self.assertTrue(response.url.startswith('https://api.whatsapp.com/send?'))
         mock_urlopen.assert_called_once()
