@@ -16,30 +16,6 @@ from .models import Booking, TourPackage
 logger = logging.getLogger(__name__)
 
 
-def _booking_summary(booking):
-    return '\n'.join([
-        'New booking request',
-        f'Name: {booking.guest_name}',
-        f'Email: {booking.guest_email}',
-        f'Phone: {booking.guest_phone or "Not provided"}',
-        f'WhatsApp: {booking.whatsapp_number or "Not provided"}',
-        f'Package: {booking.package_name or "Not selected"}',
-        f'Country: {booking.country or "Not provided"}',
-        f'Travelers: {booking.travelers}',
-        f'Start date: {booking.start_date or "Not provided"}',
-        f'Return date: {booking.return_date or "Not provided"}',
-        f'Preferred contact: {booking.get_contact_method_display()}',
-        f'Special requests: {booking.special_requests or "None"}',
-    ])
-
-
-def _whatsapp_booking_url(summary):
-    phone_number = ''.join(ch for ch in str(settings.WHATSAPP_PHONE_NUMBER) if ch.isdigit())
-    # Use WhatsApp's API domain instead of wa.me. Some networks and browsers
-    # reject wa.me because of its HSTS certificate policy.
-    return f'https://api.whatsapp.com/send?{urlencode({"phone": phone_number, "text": summary})}'
-
-
 def _send_booking_notification(booking, package_label):
     """Send a completed booking to the configured FormSubmit email endpoint."""
     form_data = {
@@ -79,13 +55,12 @@ def _booking_form(request, initial=None, redirect_url=None):
     if request.method == 'POST' and form.is_valid():
         booking = form.save()
         package_label = booking.package_name or 'your selected package'
-        summary = _booking_summary(booking)
         _send_booking_notification(booking, package_label)
         messages.success(
             request,
-            f'Thanks {booking.guest_name}. Opening WhatsApp to send your booking request.',
+            f'Thanks {booking.guest_name}. Your booking request has been sent to our team.',
         )
-        return form, redirect(_whatsapp_booking_url(summary))
+        return form, redirect(redirect_url or reverse('home'))
 
     return form, None
 

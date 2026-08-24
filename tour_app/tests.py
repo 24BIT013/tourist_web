@@ -27,7 +27,7 @@ class BookingNotificationTests(TestCase):
             if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
         ]
     )
-    def test_booking_sends_notification_and_opens_whatsapp_with_details(self, mock_urlopen):
+    def test_booking_sends_notification_and_returns_to_the_site(self, mock_urlopen):
         response = self.client.post(reverse('home'), {
             'guest_name': 'Amina Ali',
             'guest_email': 'amina@example.com',
@@ -41,10 +41,7 @@ class BookingNotificationTests(TestCase):
             'special_requests': 'Airport pickup',
         })
 
-        self.assertRedirects(response, response.url, fetch_redirect_response=False)
-        self.assertTrue(response.url.startswith('https://api.whatsapp.com/send?'))
-        self.assertIn('Amina+Ali', response.url)
-        self.assertIn('Zanzibar+Escape', response.url)
+        self.assertRedirects(response, reverse('home'), fetch_redirect_response=False)
         mock_urlopen.assert_called_once()
         notification_request = mock_urlopen.call_args.args[0]
         self.assertEqual(notification_request.full_url, settings.BOOKING_NOTIFICATION_URL)
@@ -62,7 +59,7 @@ class BookingNotificationTests(TestCase):
             if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
         ]
     )
-    def test_booking_still_opens_whatsapp_when_notification_delivery_fails(self, mock_urlopen):
+    def test_booking_returns_to_site_when_notification_delivery_fails(self, mock_urlopen):
         with self.assertLogs('tour_app.views', level='ERROR'):
             response = self.client.post(reverse('home'), {
                 'guest_name': 'Amina Ali',
@@ -73,5 +70,5 @@ class BookingNotificationTests(TestCase):
             })
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith('https://api.whatsapp.com/send?'))
+        self.assertEqual(response.url, reverse('home'))
         mock_urlopen.assert_called_once()
