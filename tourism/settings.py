@@ -85,18 +85,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHATSAPP_PHONE_NUMBER = '255612001424'
 WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
 
-# Booking submissions are sent to this mailbox. Configure EMAIL_HOST_PASSWORD
-# in Render with a Gmail App Password for this account so Gmail accepts SMTP
-# delivery (a normal Gmail password will not work).
-BOOKING_NOTIFICATION_EMAIL = os.environ.get(
-    'BOOKING_NOTIFICATION_EMAIL', 'wordoxw@gmail.com'
+# FormSubmit delivers every booking to wordoxw@gmail.com. The custom endpoint
+# has already been activated for that mailbox; no SMTP password is required.
+BOOKING_NOTIFICATION_URL = os.environ.get(
+    'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/el/laxeni'
 )
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', BOOKING_NOTIFICATION_EMAIL)
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

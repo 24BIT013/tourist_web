@@ -1,10 +1,10 @@
 import logging
 from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.core.mail import send_mail
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -38,17 +38,37 @@ def _whatsapp_booking_url(summary):
     return f'https://wa.me/{phone_number}?{urlencode({"text": summary})}'
 
 
-def _send_booking_notification(package_label, summary):
+def _send_booking_notification(booking, package_label):
+    """Send a completed booking to the configured FormSubmit email endpoint."""
+    form_data = {
+        '_subject': f'New booking request: {package_label}',
+        '_template': 'table',
+        '_captcha': 'false',
+        '_replyto': booking.guest_email,
+        'Customer name': booking.guest_name,
+        'Customer email': booking.guest_email,
+        'Phone number': booking.guest_phone or 'Not provided',
+        'WhatsApp number': booking.whatsapp_number or 'Not provided',
+        'Package': booking.package_name or 'Not selected',
+        'Country': booking.country or 'Not provided',
+        'Travelers': booking.travelers,
+        'Start date': booking.start_date or 'Not provided',
+        'Return date': booking.return_date or 'Not provided',
+        'Preferred contact': booking.get_contact_method_display(),
+        'Special requests': booking.special_requests or 'None',
+    }
+    request = Request(
+        settings.BOOKING_NOTIFICATION_URL,
+        data=urlencode(form_data).encode('utf-8'),
+        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        method='POST',
+    )
     try:
-        send_mail(
-            subject=f'New booking request: {package_label}',
-            message=summary,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.BOOKING_NOTIFICATION_EMAIL],
-            fail_silently=False,
-        )
+        with urlopen(request, timeout=10):
+            pass
     except Exception:
-        logger.exception('Unable to send booking notification email.')
+        # A FormSubmit issue must not prevent a valid booking from being saved.
+        logger.exception('Unable to send booking notification through FormSubmit.')
 
 
 def _booking_form(request, initial=None, redirect_url=None):
@@ -58,7 +78,7 @@ def _booking_form(request, initial=None, redirect_url=None):
         booking = form.save()
         package_label = booking.package_name or 'your selected package'
         summary = _booking_summary(booking)
-        _send_booking_notification(package_label, summary)
+        _send_booking_notification(booking, package_label)
         messages.success(
             request,
             f'Thanks {booking.guest_name}. Opening WhatsApp to send your booking request.',

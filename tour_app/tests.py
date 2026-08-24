@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from urllib.parse import parse_qs
 
 from django.conf import settings
 from django.test import TestCase
@@ -18,7 +19,7 @@ class BookingNotificationTests(TestCase):
             price='$500',
         )
 
-    @patch('tour_app.views.send_mail')
+    @patch('tour_app.views.urlopen')
     @override_settings(
         MIDDLEWARE=[
             middleware
@@ -26,7 +27,7 @@ class BookingNotificationTests(TestCase):
             if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
         ]
     )
-    def test_booking_sends_email_and_opens_whatsapp_with_details(self, mock_send_mail):
+    def test_booking_sends_notification_and_opens_whatsapp_with_details(self, mock_urlopen):
         response = self.client.post(reverse('home'), {
             'guest_name': 'Amina Ali',
             'guest_email': 'amina@example.com',
@@ -44,11 +45,16 @@ class BookingNotificationTests(TestCase):
         self.assertTrue(response.url.startswith('https://wa.me/255612001424?'))
         self.assertIn('Amina+Ali', response.url)
         self.assertIn('Zanzibar+Escape', response.url)
-        mock_send_mail.assert_called_once()
-        self.assertEqual(mock_send_mail.call_args.kwargs['recipient_list'], ['wordoxw@gmail.com'])
-        self.assertIn('Airport pickup', mock_send_mail.call_args.kwargs['message'])
+        mock_urlopen.assert_called_once()
+        notification_request = mock_urlopen.call_args.args[0]
+        self.assertEqual(notification_request.full_url, settings.BOOKING_NOTIFICATION_URL)
+        notification_data = parse_qs(notification_request.data.decode('utf-8'))
+        self.assertEqual(notification_data['Customer name'], ['Amina Ali'])
+        self.assertEqual(notification_data['Customer email'], ['amina@example.com'])
+        self.assertEqual(notification_data['Package'], ['Zanzibar Escape'])
+        self.assertEqual(notification_data['Special requests'], ['Airport pickup'])
 
-    @patch('tour_app.views.send_mail', side_effect=ConnectionError('SMTP unavailable'))
+    @patch('tour_app.views.urlopen', side_effect=ConnectionError('FormSubmit unavailable'))
     @override_settings(
         MIDDLEWARE=[
             middleware
@@ -56,7 +62,7 @@ class BookingNotificationTests(TestCase):
             if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
         ]
     )
-    def test_booking_still_opens_whatsapp_when_email_delivery_fails(self, mock_send_mail):
+    def test_booking_still_opens_whatsapp_when_notification_delivery_fails(self, mock_urlopen):
         with self.assertLogs('tour_app.views', level='ERROR'):
             response = self.client.post(reverse('home'), {
                 'guest_name': 'Amina Ali',
@@ -68,4 +74,4 @@ class BookingNotificationTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('https://wa.me/255612001424?'))
-        mock_send_mail.assert_called_once()
+        mock_urlopen.assert_called_once()
