@@ -85,10 +85,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHATSAPP_PHONE_NUMBER = '255612001424'
 WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
 
-# FormSubmit delivers every booking to wordoxw@gmail.com. The custom endpoint
-# has already been activated for that mailbox; no SMTP password is required.
+# FormSubmit delivers every booking to this verified mailbox; no SMTP password
+# is required. The value can be changed in Render with BOOKING_NOTIFICATION_URL.
 BOOKING_NOTIFICATION_URL = os.environ.get(
-    'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/el/laxeni'
+    'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/burminho098@gmail.com'
 )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
