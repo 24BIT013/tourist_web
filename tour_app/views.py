@@ -23,6 +23,7 @@ def _send_booking_notification(booking, package_label):
         '_template': 'table',
         '_captcha': 'false',
         '_replyto': booking.guest_email,
+        '_url': settings.BOOKING_SITE_URL,
         'Customer name': booking.guest_name,
         'Customer email': booking.guest_email,
         'Phone number': booking.guest_phone or 'Not provided',
@@ -38,7 +39,11 @@ def _send_booking_notification(booking, package_label):
     request = Request(
         settings.BOOKING_NOTIFICATION_URL,
         data=urlencode(form_data).encode('utf-8'),
-        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        headers={
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': settings.BOOKING_SITE_URL,
+            'User-Agent': 'ZanAdventure booking notifications',
+        },
         method='POST',
     )
     try:

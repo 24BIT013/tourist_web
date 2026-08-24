@@ -50,6 +50,7 @@ class BookingNotificationTests(TestCase):
         self.assertEqual(notification_data['Customer email'], ['amina@example.com'])
         self.assertEqual(notification_data['Package'], ['Zanzibar Escape'])
         self.assertEqual(notification_data['Special requests'], ['Airport pickup'])
+        self.assertEqual(notification_data['_url'], ['https://tourist-web-ucjt.onrender.com/'])
 
     @patch('tour_app.views.urlopen', side_effect=ConnectionError('FormSubmit unavailable'))
     @override_settings(

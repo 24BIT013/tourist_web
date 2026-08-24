@@ -90,5 +90,8 @@ WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your trav
 BOOKING_NOTIFICATION_URL = os.environ.get(
     'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/burminho098@gmail.com'
 )
+BOOKING_SITE_URL = os.environ.get(
+    'BOOKING_SITE_URL', 'https://tourist-web-ucjt.onrender.com/'
+)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
