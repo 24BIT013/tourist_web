@@ -15,6 +15,13 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+# Vercel is the public origin; it proxies each request to this Render service.
+# Trust it for Django's CSRF validation when a customer submits a booking.
+CSRF_TRUSTED_ORIGINS = [
+    'https://touristwebs.vercel.app',
+    'https://*.vercel.app',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -107,7 +114,7 @@ BOOKING_NOTIFICATION_URL = os.environ.get(
     'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/burminho098@gmail.com'
 )
 BOOKING_SITE_URL = os.environ.get(
-    'BOOKING_SITE_URL', 'https://tourist-web-ucjt.onrender.com/'
+    'BOOKING_SITE_URL', 'https://touristwebs.vercel.app/'
 )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
