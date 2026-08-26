@@ -15,6 +15,7 @@
         </div>
         <div class="dashboard-actions">
             <a class="btn btn-primary" href="{% url 'package_create' %}">Add package</a>
+            <a class="btn btn-secondary" href="{% url 'destination_create' %}">Add destination</a>
             <a class="btn btn-secondary" href="{% url 'packages' %}">View public site</a>
         </div>
     </div>
@@ -90,6 +91,44 @@
                             <tr>
                                 <td colspan="6" class="table-empty">No packages have been created yet.</td>
                             </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="dashboard-panel">
+            <div class="section-head split">
+                <div>
+                    <span class="eyebrow">Destinations</span>
+                    <h2>Destination library</h2>
+                </div>
+                <a class="btn btn-ghost" href="{% url 'destination_create' %}">Add destination</a>
+            </div>
+
+            <div class="table-wrap">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Country</th>
+                            <th>Packages</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for destination in destinations %}
+                            <tr>
+                                <td>
+                                    <strong>{{ destination.name }}</strong>
+                                    <div class="muted">{{ destination.description|default:"No description yet."|truncatewords:12 }}</div>
+                                </td>
+                                <td>{{ destination.country }}</td>
+                                <td>{{ destination.package_count }}</td>
+                                <td class="table-actions"><a href="{% url 'destination_edit' destination.pk %}">Edit</a></td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="4" class="table-empty">No destinations have been added yet.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

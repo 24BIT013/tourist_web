@@ -70,6 +70,18 @@ class PackageForm(forms.ModelForm):
         return package
 
 
+class DestinationForm(forms.ModelForm):
+    class Meta:
+        model = Destination
+        fields = ['name', 'country', 'description', 'image_url']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Zanzibar'}),
+            'country': forms.TextInput(attrs={'placeholder': 'Tanzania'}),
+            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'What makes this destination special?'}),
+            'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/destination.jpg'}),
+        }
+
+
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking

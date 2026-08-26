@@ -1,0 +1,51 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Voyage Vista | {% if is_edit %}Edit Destination{% else %}Add Destination{% endif %}{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section">
+    <div class="container dashboard-form-grid">
+        <article class="dashboard-panel form-panel">
+            <span class="eyebrow">{% if is_edit %}Edit destination{% else %}Add destination{% endif %}</span>
+            <h1>{% if is_edit %}Update {{ destination.name }}{% else %}Create a new destination{% endif %}</h1>
+            <p>Save the destination first, then select it while creating or editing a travel package.</p>
+
+            <form class="dashboard-form" method="post">
+                {% csrf_token %}
+                <div class="form-grid form-grid-dashboard">
+                    <label class="form-field">
+                        <span>Destination name</span>
+                        {{ form.name }}
+                        {% for error in form.name.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field">
+                        <span>Country</span>
+                        {{ form.country }}
+                        {% for error in form.country.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field form-wide">
+                        <span>Description</span>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                    <label class="form-field form-wide">
+                        <span>Image URL</span>
+                        {{ form.image_url }}
+                        {% for error in form.image_url.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">Save destination</button>
+                    <a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a>
+                </div>
+            </form>
+        </article>
+        <aside class="dashboard-panel form-help">
+            <span class="eyebrow">Next step</span>
+            <h2>Build the package</h2>
+            <p>Once saved, this destination will appear in the package form. Its country is filled in automatically if you leave the package country blank.</p>
+        </aside>
+    </div>
+</section>
+{% endblock %}

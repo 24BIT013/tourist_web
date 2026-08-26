@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.test import override_settings
 from django.urls import reverse
 
-from .models import TourPackage
+from .models import Destination, TourPackage
 
 
 class BookingNotificationTests(TestCase):
@@ -73,3 +73,40 @@ class BookingNotificationTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('home'))
         mock_urlopen.assert_called_once()
+
+
+@override_settings(
+    MIDDLEWARE=[
+        middleware
+        for middleware in settings.MIDDLEWARE
+        if middleware != 'whitenoise.middleware.WhiteNoiseMiddleware'
+    ]
+)
+class DestinationManagementTests(TestCase):
+    def setUp(self):
+        self.staff_user = self._create_staff_user()
+
+    def _create_staff_user(self):
+        from django.contrib.auth import get_user_model
+        return get_user_model().objects.create_user('manager', password='password', is_staff=True)
+
+    def test_staff_can_create_and_edit_a_destination(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(reverse('destination_create'), {
+            'name': 'Serengeti',
+            'country': 'Tanzania',
+            'description': 'Wildlife and vast plains.',
+            'image_url': 'https://example.com/serengeti.jpg',
+        })
+        self.assertRedirects(response, reverse('dashboard'), fetch_redirect_response=False)
+        destination = Destination.objects.get(name='Serengeti')
+
+        response = self.client.post(reverse('destination_edit', args=[destination.pk]), {
+            'name': 'Serengeti National Park',
+            'country': 'Tanzania',
+            'description': 'Wildlife safaris.',
+            'image_url': 'https://example.com/serengeti.jpg',
+        })
+        self.assertRedirects(response, reverse('dashboard'), fetch_redirect_response=False)
+        destination.refresh_from_db()
+        self.assertEqual(destination.name, 'Serengeti National Park')

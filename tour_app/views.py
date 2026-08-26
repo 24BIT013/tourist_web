@@ -9,8 +9,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import BookingForm, PackageForm
-from .models import Booking, TourPackage
+from .forms import BookingForm, DestinationForm, PackageForm
+from .models import Booking, Destination, TourPackage
 
 
 logger = logging.getLogger(__name__)
@@ -138,6 +138,7 @@ def dashboard(request):
 
     context = {
         'packages': packages,
+        'destinations': Destination.objects.annotate(package_count=Count('packages')).order_by('name'),
         'bookings': bookings,
         'stats': {
             'packages': packages.count(),
@@ -160,6 +161,17 @@ def package_edit(request, pk):
     return _package_form(request, package=package)
 
 
+@staff_member_required
+def destination_create(request):
+    return _destination_form(request)
+
+
+@staff_member_required
+def destination_edit(request, pk):
+    destination = get_object_or_404(Destination, pk=pk)
+    return _destination_form(request, destination=destination)
+
+
 def _package_form(request, package=None):
     form = PackageForm(request.POST or None, instance=package)
 
@@ -175,6 +187,22 @@ def _package_form(request, package=None):
         'is_edit': package is not None,
     }
     return render(request, 'tour_app/package_form.html', context)
+
+
+def _destination_form(request, destination=None):
+    form = DestinationForm(request.POST or None, instance=destination)
+
+    if request.method == 'POST' and form.is_valid():
+        saved_destination = form.save()
+        action = 'updated' if destination else 'created'
+        messages.success(request, f'Destination "{saved_destination.name}" has been {action}.')
+        return redirect('dashboard')
+
+    return render(request, 'tour_app/destination_form.html', {
+        'form': form,
+        'destination': destination,
+        'is_edit': destination is not None,
+    })
 
 
 @staff_member_required
