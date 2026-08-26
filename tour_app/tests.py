@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.test import override_settings
 from django.urls import reverse
 
-from .models import Destination, TourPackage
+from .models import Booking, Destination, TourPackage
 
 
 class BookingNotificationTests(TestCase):
@@ -110,3 +110,12 @@ class DestinationManagementTests(TestCase):
         self.assertRedirects(response, reverse('dashboard'), fetch_redirect_response=False)
         destination.refresh_from_db()
         self.assertEqual(destination.name, 'Serengeti National Park')
+
+
+class AdminSiteTests(TestCase):
+    def test_site_models_are_registered_with_admin(self):
+        from django.contrib import admin
+
+        self.assertIn(Destination, admin.site._registry)
+        self.assertIn(TourPackage, admin.site._registry)
+        self.assertIn(Booking, admin.site._registry)
