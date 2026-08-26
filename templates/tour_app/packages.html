@@ -8,6 +8,9 @@
         <div class="section-head centered">
             <span class="eyebrow">All packages</span>
             <h2>Find your next escape</h2>
+            {% if user.is_staff %}
+                <a class="btn btn-primary" href="{% url 'package_create' %}">Add package</a>
+            {% endif %}
         </div>
 
         <div class="package-grid">
