@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "https://tourist-web-ucjt.onrender.com/$1"
+      "destination": "https://tourist-web-3.onrender.com/$1"
     }
   ]
 }

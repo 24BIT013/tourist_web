@@ -12,6 +12,7 @@ ALLOWED_HOSTS = [
     # prevents Django from rejecting a newly created or renamed service.
     '.onrender.com',
     'touristwebs.vercel.app',
+    'abdishan12.vercel.app',
     # Allows Vercel's generated preview deployment subdomains.
     '.vercel.app',
     'localhost',
@@ -22,6 +23,7 @@ ALLOWED_HOSTS = [
 # Trust it for Django's CSRF validation when a customer submits a booking.
 CSRF_TRUSTED_ORIGINS = [
     'https://touristwebs.vercel.app',
+    'https://abdishan12.vercel.app',
     'https://*.vercel.app',
 ]
 
@@ -125,7 +127,7 @@ BOOKING_NOTIFICATION_URL = os.environ.get(
     'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/burminho098@gmail.com'
 )
 BOOKING_SITE_URL = os.environ.get(
-    'BOOKING_SITE_URL', 'https://touristwebs.vercel.app/'
+    'BOOKING_SITE_URL', 'https://abdishan12.vercel.app/'
 )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
