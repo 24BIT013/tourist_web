@@ -567,8 +567,18 @@ body {
     color: #697d7a;
 }
 
+.booking-form label em {
+    font-style: normal;
+    font-weight: 500;
+}
+
+.form-field-wide {
+    grid-column: 1 / -1;
+}
+
 .booking-form input,
-.booking-form select {
+.booking-form select,
+.booking-form textarea {
     border: 1px solid #ccdcd3;
     border-radius: 14px;
     background: #fafffd;

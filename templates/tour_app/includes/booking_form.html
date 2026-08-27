@@ -21,6 +21,12 @@
         </div>
     {% endif %}
 
+    {% if booking_form.errors %}
+        <div class="form-errors" role="alert">
+            <p>Please correct the highlighted booking details and try again.</p>
+        </div>
+    {% endif %}
+
     <div class="form-grid">
         <label class="form-field">
             <span>Full name</span>
@@ -87,6 +93,30 @@
             <span>Start date</span>
             {{ booking_form.start_date }}
             {% for error in booking_form.start_date.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Return date <em>(optional)</em></span>
+            {{ booking_form.return_date }}
+            {% for error in booking_form.return_date.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field">
+            <span>Preferred contact method</span>
+            {{ booking_form.contact_method }}
+            {% for error in booking_form.contact_method.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+        </label>
+
+        <label class="form-field form-field-wide">
+            <span>Special requests <em>(optional)</em></span>
+            {{ booking_form.special_requests }}
+            {% for error in booking_form.special_requests.errors %}
                 <small class="field-error">{{ error }}</small>
             {% endfor %}
         </label>
