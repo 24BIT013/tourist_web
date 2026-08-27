@@ -127,6 +127,12 @@ def packages(request):
     return render(request, 'tour_app/packages.html', context)
 
 
+def package_detail_by_id(request, pk):
+    """Redirect old ID-based package URLs to their canonical slug URL."""
+    package = get_object_or_404(TourPackage, pk=pk)
+    return redirect('package_detail', slug=package.slug, permanent=True)
+
+
 def package_detail(request, slug):
     package = get_object_or_404(TourPackage.objects.select_related('destination'), slug=slug)
     booking_form, booking_response = _booking_form(

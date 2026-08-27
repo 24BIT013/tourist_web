@@ -120,6 +120,24 @@ class PublicPackagesTests(TestCase):
         self.assertContains(response, 'Package 2')
         self.assertContains(response, 'Package 3')
 
+    def test_numeric_package_url_redirects_to_the_package_slug(self):
+        package = TourPackage.objects.create(
+            title='Zanzibar Escape',
+            slug='zanzibar-escape',
+            country='Tanzania',
+            duration='4 days',
+            price='$500',
+        )
+
+        response = self.client.get(f'/packages/{package.pk}/')
+
+        self.assertRedirects(
+            response,
+            f'/packages/{package.slug}/',
+            status_code=301,
+            target_status_code=200,
+        )
+
 
 @override_settings(
     SECURE_SSL_REDIRECT=False,

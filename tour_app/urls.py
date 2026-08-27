@@ -4,6 +4,10 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('packages/', views.packages, name='packages'),
+    # Keep ID-based links working while public links use readable slugs.
+    # This route must precede the slug route because a numeric ID is also a
+    # valid slug.
+    path('packages/<int:pk>/', views.package_detail_by_id, name='package_detail_by_id'),
     path('packages/<slug:slug>/', views.package_detail, name='package_detail'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/packages/add/', views.package_create, name='package_create'),
