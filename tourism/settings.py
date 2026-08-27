@@ -8,6 +8,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tourism-site-secret-k
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = [
     'tourist-web-ucjt.onrender.com',
+    # Render assigns a hostname to each service; accepting its subdomains
+    # prevents Django from rejecting a newly created or renamed service.
+    '.onrender.com',
     'touristwebs.vercel.app',
     # Allows Vercel's generated preview deployment subdomains.
     '.vercel.app',
