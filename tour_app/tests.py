@@ -101,6 +101,26 @@ class BookingNotificationTests(TestCase):
         self.assertTrue(Booking.objects.filter(guest_email='amina@example.com').exists())
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
+class PublicPackagesTests(TestCase):
+    def test_homepage_shows_all_packages_including_new_packages(self):
+        for number in range(4):
+            TourPackage.objects.create(
+                title=f'Package {number}',
+                slug=f'package-{number}',
+                country='Tanzania',
+                duration='3 days',
+                price='$500',
+            )
+
+        response = self.client.get(reverse('home'))
+
+        self.assertContains(response, 'Package 0')
+        self.assertContains(response, 'Package 1')
+        self.assertContains(response, 'Package 2')
+        self.assertContains(response, 'Package 3')
+
+
 @override_settings(
     SECURE_SSL_REDIRECT=False,
     MIDDLEWARE=[

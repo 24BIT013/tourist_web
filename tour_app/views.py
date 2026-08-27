@@ -87,8 +87,11 @@ def home(request):
     if booking_response:
         return booking_response
 
-    packages = list(
-        TourPackage.objects.select_related('destination').order_by('-is_popular', '-created_at')[:3]
+    # Show every published package on the homepage.  Previously only the
+    # first three (with popular packages first) were rendered, which hid newly
+    # created packages from visitors.
+    packages = TourPackage.objects.select_related('destination').order_by(
+        '-is_popular', '-created_at'
     )
     stats = [
         {'label': 'Happy Travelers', 'value': '24K+'},
