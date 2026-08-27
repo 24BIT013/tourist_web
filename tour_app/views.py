@@ -23,7 +23,10 @@ def _send_booking_notification(booking, package_label):
         '_template': 'table',
         '_captcha': 'false',
         '_replyto': booking.guest_email,
-        '_url': settings.BOOKING_SITE_URL,
+        # FormSubmit uses this conventional field to enable Reply-To and mail
+        # features.  A descriptive "Customer email" field alone is not enough.
+        'email': booking.guest_email,
+        '_next': settings.BOOKING_SITE_URL,
         'Customer name': booking.guest_name,
         'Customer email': booking.guest_email,
         'Phone number': booking.guest_phone or 'Not provided',
@@ -48,11 +51,15 @@ def _send_booking_notification(booking, package_label):
         method='POST',
     )
     try:
-        with urlopen(request, timeout=10):
-            pass
+        with urlopen(request, timeout=10) as response:
+            if not 200 <= response.status < 400:
+                raise RuntimeError(f'FormSubmit returned HTTP {response.status}')
+        return True
     except Exception:
-        # A FormSubmit issue must not prevent a valid booking from being saved.
+        # A FormSubmit issue must not prevent a valid booking from being saved,
+        # but it must be visible in the deployment logs for troubleshooting.
         logger.exception('Unable to send booking notification through FormSubmit.')
+        return False
 
 
 def _booking_form(request, initial=None, redirect_url=None):
@@ -61,12 +68,16 @@ def _booking_form(request, initial=None, redirect_url=None):
     if request.method == 'POST' and form.is_valid():
         booking = form.save()
         package_label = booking.package_name or 'your selected package'
-        _send_booking_notification(booking, package_label)
+        notification_sent = _send_booking_notification(booking, package_label)
         messages.success(
             request,
             f'Thanks {booking.guest_name}. Your booking request has been sent to our team.',
         )
-        return form, redirect(redirect_url or reverse('home'))
+        # The public site is a Vercel rewrite to Render.  A query parameter
+        # keeps the confirmation visible even when the session cookie cannot
+        # make the cross-domain round trip.
+        notice = 'success' if notification_sent else 'saved'
+        return form, redirect(f"{redirect_url or reverse('home')}?booking={notice}#booking")
 
     return form, None
 
@@ -92,6 +103,7 @@ def home(request):
         'booking_form': booking_form,
         'booking_packages': TourPackage.objects.order_by('title'),
         'booking_action': reverse('home'),
+        'booking_notice': request.GET.get('booking'),
     }
     return render(request, 'tour_app/index.html', context)
 
@@ -107,6 +119,7 @@ def packages(request):
         'booking_form': booking_form,
         'booking_packages': TourPackage.objects.order_by('title'),
         'booking_action': reverse('packages'),
+        'booking_notice': request.GET.get('booking'),
     }
     return render(request, 'tour_app/packages.html', context)
 
@@ -126,6 +139,7 @@ def package_detail(request, slug):
         'booking_form': booking_form,
         'booking_packages': TourPackage.objects.order_by('title'),
         'booking_action': reverse('package_detail', kwargs={'slug': slug}),
+        'booking_notice': request.GET.get('booking'),
     }
     return render(request, 'tour_app/package_detail.html', context)
 

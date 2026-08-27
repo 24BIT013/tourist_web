@@ -1,6 +1,18 @@
 <form class="booking-form" method="post" action="{{ booking_action }}">
     {% csrf_token %}
 
+    {% if booking_notice == 'success' %}
+        <div class="booking-confirmation" role="status">
+            <strong>Thanks! Your booking request has been sent.</strong>
+            <span>Our travel team will contact you soon.</span>
+        </div>
+    {% elif booking_notice == 'saved' %}
+        <div class="booking-confirmation booking-confirmation-warning" role="status">
+            <strong>Thanks! Your booking request was saved.</strong>
+            <span>We could not confirm email delivery yet; our team can still see your request.</span>
+        </div>
+    {% endif %}
+
     {% if booking_form.non_field_errors %}
         <div class="form-errors">
             {% for error in booking_form.non_field_errors %}

@@ -534,6 +534,24 @@ body {
     align-self: center;
 }
 
+.booking-confirmation {
+    margin-bottom: 20px;
+    padding: 15px 18px;
+    border: 1px solid #a8d9bf;
+    border-radius: 14px;
+    background: #edfaf1;
+    color: #205f3d;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.booking-confirmation-warning {
+    border-color: #ecd48e;
+    background: #fff8e3;
+    color: #765b13;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(220px, 1fr));

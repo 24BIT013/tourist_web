@@ -21,6 +21,7 @@ class BookingNotificationTests(TestCase):
 
     @patch('tour_app.views.urlopen')
     @override_settings(
+        SECURE_SSL_REDIRECT=False,
         MIDDLEWARE=[
             middleware
             for middleware in settings.MIDDLEWARE
@@ -28,6 +29,7 @@ class BookingNotificationTests(TestCase):
         ]
     )
     def test_booking_sends_notification_and_returns_to_the_site(self, mock_urlopen):
+        mock_urlopen.return_value.__enter__.return_value.status = 200
         response = self.client.post(reverse('home'), {
             'guest_name': 'Amina Ali',
             'guest_email': 'amina@example.com',
@@ -41,21 +43,23 @@ class BookingNotificationTests(TestCase):
             'special_requests': 'Airport pickup',
         })
 
-        self.assertRedirects(response, reverse('home'), fetch_redirect_response=False)
+        self.assertRedirects(response, f'{reverse("home")}?booking=success#booking', fetch_redirect_response=False)
         mock_urlopen.assert_called_once()
         notification_request = mock_urlopen.call_args.args[0]
         self.assertEqual(notification_request.full_url, settings.BOOKING_NOTIFICATION_URL)
         notification_data = parse_qs(notification_request.data.decode('utf-8'))
         self.assertEqual(notification_data['Customer name'], ['Amina Ali'])
         self.assertEqual(notification_data['Customer email'], ['amina@example.com'])
+        self.assertEqual(notification_data['email'], ['amina@example.com'])
         self.assertEqual(notification_data['Package'], ['Zanzibar Escape'])
         self.assertEqual(notification_data['Estimated total'], ['$1,000'])
         self.assertEqual(notification_data['Special requests'], ['Airport pickup'])
-        self.assertEqual(notification_data['_url'], ['https://touristwebs.vercel.app/'])
+        self.assertEqual(notification_data['_next'], ['https://touristwebs.vercel.app/'])
         self.assertEqual(Booking.objects.get().total_price, '$1,000')
 
     @patch('tour_app.views.urlopen', side_effect=ConnectionError('FormSubmit unavailable'))
     @override_settings(
+        SECURE_SSL_REDIRECT=False,
         MIDDLEWARE=[
             middleware
             for middleware in settings.MIDDLEWARE
@@ -73,11 +77,12 @@ class BookingNotificationTests(TestCase):
             })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('home'))
+        self.assertEqual(response.url, f'{reverse("home")}?booking=saved#booking')
         mock_urlopen.assert_called_once()
 
 
 @override_settings(
+    SECURE_SSL_REDIRECT=False,
     MIDDLEWARE=[
         middleware
         for middleware in settings.MIDDLEWARE
