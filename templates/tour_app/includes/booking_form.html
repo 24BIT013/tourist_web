@@ -44,7 +44,14 @@
 
         <label class="form-field">
             <span>Package</span>
-            {{ booking_form.package }}
+            <select name="package" id="id_package" class="form-select" data-price-selector>
+                <option value="">Select a package</option>
+                {% for package in booking_packages %}
+                    <option value="{{ package.pk }}" data-price="{{ package.price }}" {% if booking_form.package.value|stringformat:'s' == package.pk|stringformat:'s' %}selected{% endif %}>
+                        {{ package.title }} — {{ package.price }} per traveler
+                    </option>
+                {% endfor %}
+            </select>
             {% for error in booking_form.package.errors %}
                 <small class="field-error">{{ error }}</small>
             {% endfor %}
@@ -57,6 +64,12 @@
                 <small class="field-error">{{ error }}</small>
             {% endfor %}
         </label>
+
+        <div class="price-summary" aria-live="polite" data-price-summary>
+            <span class="price-summary-label">Estimated total</span>
+            <strong data-total-price>Select a package and number of travelers</strong>
+            <small data-price-breakdown>Prices are calculated per traveler.</small>
+        </div>
 
         <label class="form-field">
             <span>Start date</span>

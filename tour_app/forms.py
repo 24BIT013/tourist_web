@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.text import slugify
 
-from .models import Booking, Destination, TourPackage
+from .models import Booking, Destination, TourPackage, calculate_package_total
 
 
 def _unique_slug(model, value, instance=None):
@@ -114,3 +114,13 @@ class BookingForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['package'].queryset = TourPackage.objects.order_by('title')
         self.fields['package'].empty_label = 'Select a package'
+
+    def save(self, commit=True):
+        booking = super().save(commit=False)
+        if booking.package:
+            booking.total_price = calculate_package_total(
+                booking.package.price, booking.travelers
+            )
+        if commit:
+            booking.save()
+        return booking

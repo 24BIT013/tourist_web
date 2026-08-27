@@ -49,8 +49,10 @@ class BookingNotificationTests(TestCase):
         self.assertEqual(notification_data['Customer name'], ['Amina Ali'])
         self.assertEqual(notification_data['Customer email'], ['amina@example.com'])
         self.assertEqual(notification_data['Package'], ['Zanzibar Escape'])
+        self.assertEqual(notification_data['Estimated total'], ['$1,000'])
         self.assertEqual(notification_data['Special requests'], ['Airport pickup'])
         self.assertEqual(notification_data['_url'], ['https://touristwebs.vercel.app/'])
+        self.assertEqual(Booking.objects.get().total_price, '$1,000')
 
     @patch('tour_app.views.urlopen', side_effect=ConnectionError('FormSubmit unavailable'))
     @override_settings(

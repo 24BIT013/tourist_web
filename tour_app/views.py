@@ -31,6 +31,7 @@ def _send_booking_notification(booking, package_label):
         'Package': booking.package_name or 'Not selected',
         'Country': booking.country or 'Not provided',
         'Travelers': booking.travelers,
+        'Estimated total': booking.total_price or 'Price available on request',
         'Start date': booking.start_date or 'Not provided',
         'Return date': booking.return_date or 'Not provided',
         'Preferred contact': booking.get_contact_method_display(),

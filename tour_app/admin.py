@@ -43,6 +43,7 @@ class BookingAdmin(admin.ModelAdmin):
         'package_name',
         'package',
         'travelers',
+        'total_price',
         'status',
         'created_at',
     )
@@ -54,7 +55,7 @@ class BookingAdmin(admin.ModelAdmin):
     actions = ('mark_confirmed', 'mark_cancelled')
     fieldsets = (
         ('Guest', {'fields': ('guest_name', 'guest_email', 'guest_phone', 'whatsapp_number', 'country')}),
-        ('Tour and dates', {'fields': ('package', 'package_name', 'travelers', 'start_date', 'return_date')}),
+        ('Tour and dates', {'fields': ('package', 'package_name', 'travelers', 'total_price', 'start_date', 'return_date')}),
         ('Booking management', {'fields': ('contact_method', 'special_requests', 'status', 'created_at')}),
     )
 

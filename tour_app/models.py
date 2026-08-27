@@ -1,5 +1,23 @@
 from django.db import models
 from django.utils.text import slugify
+from decimal import Decimal, InvalidOperation
+import re
+
+
+def calculate_package_total(price, travelers):
+    """Return a display-ready total from a package's per-traveler price."""
+    match = re.search(r'([€£$])?\s*([0-9][0-9,]*(?:\.\d{1,2})?)', price or '')
+    if not match:
+        return ''
+
+    try:
+        amount = Decimal(match.group(2).replace(',', '')) * Decimal(travelers)
+    except (InvalidOperation, TypeError, ValueError):
+        return ''
+
+    currency = match.group(1) or ''
+    formatted_amount = f'{amount:,.2f}'.rstrip('0').rstrip('.')
+    return f'{currency}{formatted_amount}'
 
 
 class Destination(models.Model):
@@ -53,6 +71,7 @@ class Booking(models.Model):
     package = models.ForeignKey(TourPackage, on_delete=models.SET_NULL, null=True, blank=True, related_name='bookings')
     package_name = models.CharField(max_length=150, blank=True, default='')
     travelers = models.PositiveIntegerField(default=1)
+    total_price = models.CharField(max_length=50, blank=True, default='')
     start_date = models.DateField(null=True, blank=True)
     return_date = models.DateField(null=True, blank=True)
     contact_method = models.CharField(max_length=20, choices=ContactMethod.choices, default=ContactMethod.WHATSAPP)
@@ -64,6 +83,9 @@ class Booking(models.Model):
         if self.package:
             self.package_name = self.package_name or self.package.title
             self.country = self.country or self.package.country
+            self.total_price = self.total_price or calculate_package_total(
+                self.package.price, self.travelers
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):
