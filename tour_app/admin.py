@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Booking, Destination, TourPackage
+from .models import Booking, Destination, GalleryImage, TourPackage
 
-admin.site.site_header = 'Tourism Website Administration'
-admin.site.site_title = 'Tourism Admin'
-admin.site.index_title = 'Manage tours, destinations, and customer bookings'
+admin.site.site_header = 'Zanji Adventures Administration'
+admin.site.site_title = 'Zanji Adventures Admin'
+admin.site.index_title = 'Manage Zanzibar tours, gallery images, and customer bookings'
 
 
 @admin.register(Destination)
@@ -31,6 +31,13 @@ class TourPackageAdmin(admin.ModelAdmin):
         }),
         ('Record information', {'fields': ('created_at',)}),
     )
+
+
+@admin.register(GalleryImage)
+class GalleryImageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'image_url', 'created_at')
+    search_fields = ('title', 'caption')
+    readonly_fields = ('created_at',)
 
 
 @admin.register(Booking)

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}ZanAdventure{% endblock %}</title>
+    <title>{% block title %}Zanji Adventures{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -12,11 +12,12 @@
         <div class="container nav-wrapper">
             <a href="{% url 'home' %}" class="brand">
                 <span class="brand-icon">ZA</span>
-                <span>ZanAdventure</span>
+                <span>Zanji Adventures</span>
             </a>
             <nav class="main-nav">
                 <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                 <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}">Packages</a>
+                <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a>
                 <a href="{% url 'home' %}#booking">Book a trip</a>
                 <a href="{% url 'home' %}#contact">Contact</a>
                 {% if user.is_staff %}
@@ -65,7 +66,7 @@
             <div>
                 <a class="brand footer-brand" href="{% url 'home' %}">
                     <span class="brand-icon">ZA</span>
-                    <span>ZanAdventure</span>
+                    <span>Zanji Adventures</span>
                 </a>
                 <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
             </div>
@@ -73,11 +74,13 @@
                 <h4>Company</h4>
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'packages' %}">Packages</a>
+                <a href="{% url 'gallery' %}">Gallery</a>
                 <a href="{% url 'home' %}#booking">Booking</a>
             </div>
             <div>
                 <h4>Explore</h4>
                 <a href="{% url 'packages' %}">All packages</a>
+                <a href="{% url 'gallery' %}">Photo gallery</a>
                 <a href="{% url 'home' %}#experiences">Experiences</a>
                 <a href="{% url 'home' %}#contact">Contact</a>
             </div>
@@ -91,7 +94,7 @@
             </div>
         </div>
         <div class="container footer-bottom">
-            <span>Copyright 2026 Zenji_Adventure. All rights reserved.</span>
+            <span>Copyright 2026 Zanji Adventures. All rights reserved.</span>
         </div>
     </footer>
 

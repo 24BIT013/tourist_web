@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import BookingForm, DestinationForm, PackageForm
-from .models import Booking, Destination, TourPackage
+from .models import Booking, Destination, GalleryImage, TourPackage
 
 
 logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ def _send_booking_notification(booking, package_label):
         headers={
             'Content-Type': 'application/x-www-form-urlencoded',
             'Referer': settings.BOOKING_SITE_URL,
-            'User-Agent': 'ZanAdventure booking notifications',
+            'User-Agent': 'Zanji Adventures booking notifications',
         },
         method='POST',
     )
@@ -125,6 +125,12 @@ def packages(request):
         'booking_notice': request.GET.get('booking'),
     }
     return render(request, 'tour_app/packages.html', context)
+
+
+def gallery(request):
+    return render(request, 'tour_app/gallery.html', {
+        'gallery_images': GalleryImage.objects.all(),
+    })
 
 
 def package_detail_by_id(request, pk):

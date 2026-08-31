@@ -52,6 +52,22 @@ class TourPackage(models.Model):
         return self.title
 
 
+class GalleryImage(models.Model):
+    """A photograph displayed on the public gallery page."""
+    title = models.CharField(max_length=150, blank=True)
+    image_url = models.URLField(help_text='Paste the public link to the photograph.')
+    caption = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+        verbose_name = 'gallery image'
+        verbose_name_plural = 'gallery images'
+
+    def __str__(self):
+        return self.title or 'Gallery image'
+
+
 class Booking(models.Model):
     class Status(models.TextChoices):
         PENDING = 'pending', 'Pending'

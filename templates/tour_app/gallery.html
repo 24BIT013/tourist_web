@@ -1,0 +1,33 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Zanji Adventures | Gallery{% endblock %}
+
+{% block content %}
+<section class="section gallery-page">
+    <div class="container">
+        <div class="section-head centered">
+            <span class="eyebrow">Zanzibar moments</span>
+            <h1>Our gallery</h1>
+            <p>Add and manage photographs from the Zanji Adventures admin area.</p>
+        </div>
+
+        <div class="gallery-grid">
+            {% for photo in gallery_images %}
+                <figure class="gallery-card">
+                    <img src="{{ photo.image_url }}" alt="{{ photo.title|default:'Zanji Adventures gallery image' }}">
+                    {% if photo.title or photo.caption %}
+                        <figcaption>
+                            {% if photo.title %}<h2>{{ photo.title }}</h2>{% endif %}
+                            {% if photo.caption %}<p>{{ photo.caption }}</p>{% endif %}
+                        </figcaption>
+                    {% endif %}
+                </figure>
+            {% empty %}
+                <div class="empty-state">
+                    <p>Our Zanzibar photo gallery is being prepared. Please check back soon.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
