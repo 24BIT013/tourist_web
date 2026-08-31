@@ -6,7 +6,7 @@
 <section class="section package-detail">
     <div class="container detail-layout">
         <div class="detail-image">
-            <img src="{{ package.image|default:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80' }}" alt="{{ package.title }}">
+            <img src="{{ package.image_display_url|default:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80' }}" alt="{{ package.title }}">
         </div>
         <div class="detail-copy">
             <span class="eyebrow">{{ package.country }}</span>

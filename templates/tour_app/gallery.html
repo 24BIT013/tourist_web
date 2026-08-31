@@ -14,7 +14,7 @@
         <div class="gallery-grid">
             {% for photo in gallery_images %}
                 <figure class="gallery-card">
-                    <img src="{{ photo.image_url }}" alt="{{ photo.title|default:'Zanji Adventures gallery image' }}">
+                    <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zanji Adventures gallery image' }}">
                     {% if photo.title or photo.caption %}
                         <figcaption>
                             {% if photo.title %}<h2>{{ photo.title }}</h2>{% endif %}

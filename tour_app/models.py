@@ -1,4 +1,5 @@
 from django.db import models
+from django.templatetags.static import static
 from django.utils.text import slugify
 from decimal import Decimal, InvalidOperation
 import re
@@ -51,6 +52,13 @@ class TourPackage(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def image_display_url(self):
+        """Use Django's static URL for locally stored tour photographs."""
+        if self.image.startswith('images/'):
+            return static(self.image)
+        return self.image
+
 
 class GalleryImage(models.Model):
     """A photograph displayed on the public gallery page."""
@@ -66,6 +74,13 @@ class GalleryImage(models.Model):
 
     def __str__(self):
         return self.title or 'Gallery image'
+
+    @property
+    def display_url(self):
+        """Return the correct public address for local or external photos."""
+        if self.image_url.startswith('images/'):
+            return static(self.image_url)
+        return self.image_url
 
 
 class Booking(models.Model):
