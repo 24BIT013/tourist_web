@@ -11,9 +11,11 @@
             <p>Add and manage photographs from the Zanji Adventures admin area.</p>
         </div>
 
-        <div class="gallery-grid">
+        <div class="gallery-slider" data-gallery-slider aria-label="Zanji Adventures photo gallery" tabindex="0">
+            <div class="gallery-viewport">
+                <div class="gallery-track">
             {% for photo in gallery_images %}
-                <figure class="gallery-card">
+                <figure class="gallery-card gallery-slide" data-gallery-slide aria-hidden="{% if not forloop.first %}true{% else %}false{% endif %}">
                     <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zanji Adventures gallery image' }}">
                     {% if photo.title or photo.caption %}
                         <figcaption>
@@ -27,6 +29,15 @@
                     <p>Our Zanzibar photo gallery is being prepared. Please check back soon.</p>
                 </div>
             {% endfor %}
+                </div>
+            </div>
+            {% if gallery_images|length > 1 %}
+                <div class="gallery-controls">
+                    <button class="gallery-control" type="button" data-gallery-previous aria-label="Show previous photo">←</button>
+                    <div class="gallery-dots" data-gallery-dots aria-label="Choose a gallery photo"></div>
+                    <button class="gallery-control" type="button" data-gallery-next aria-label="Show next photo">→</button>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>

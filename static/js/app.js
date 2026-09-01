@@ -62,4 +62,73 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    document.querySelectorAll('[data-gallery-slider]').forEach((slider) => {
+        const track = slider.querySelector('.gallery-track');
+        const slides = [...slider.querySelectorAll('[data-gallery-slide]')];
+        const previous = slider.querySelector('[data-gallery-previous]');
+        const next = slider.querySelector('[data-gallery-next]');
+        const dots = slider.querySelector('[data-gallery-dots]');
+        if (!track || slides.length < 2 || !previous || !next || !dots) return;
+
+        let currentIndex = 0;
+        let timer;
+        let touchStartX = 0;
+
+        const dotButtons = slides.map((slide, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'gallery-dot';
+            dot.setAttribute('aria-label', `Show photo ${index + 1}`);
+            dot.addEventListener('click', () => showSlide(index));
+            dots.append(dot);
+            return dot;
+        });
+
+        const showSlide = (index) => {
+            currentIndex = (index + slides.length) % slides.length;
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            slides.forEach((slide, slideIndex) => {
+                slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
+            });
+            dotButtons.forEach((dot, dotIndex) => {
+                const isActive = dotIndex === currentIndex;
+                dot.classList.toggle('is-active', isActive);
+                dot.setAttribute('aria-current', String(isActive));
+            });
+        };
+
+        const restartAutoplay = () => {
+            window.clearInterval(timer);
+            timer = window.setInterval(() => showSlide(currentIndex + 1), 5000);
+        };
+
+        previous.addEventListener('click', () => {
+            showSlide(currentIndex - 1);
+            restartAutoplay();
+        });
+        next.addEventListener('click', () => {
+            showSlide(currentIndex + 1);
+            restartAutoplay();
+        });
+        slider.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft') previous.click();
+            if (event.key === 'ArrowRight') next.click();
+        });
+        slider.addEventListener('mouseenter', () => window.clearInterval(timer));
+        slider.addEventListener('mouseleave', restartAutoplay);
+        slider.addEventListener('touchstart', (event) => {
+            touchStartX = event.changedTouches[0].screenX;
+        }, { passive: true });
+        slider.addEventListener('touchend', (event) => {
+            const distance = event.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(distance) > 40) {
+                showSlide(currentIndex + (distance < 0 ? 1 : -1));
+                restartAutoplay();
+            }
+        }, { passive: true });
+
+        showSlide(0);
+        restartAutoplay();
+    });
 });
