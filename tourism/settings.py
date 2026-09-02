@@ -120,6 +120,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WHATSAPP_PHONE_NUMBER = '255612001424'
 WHATSAPP_DEFAULT_MESSAGE = 'Hello, I would like more information about your travel packages.'
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'burminho098@gmail.com')
 
 # FormSubmit delivers every booking to this verified mailbox; no SMTP password
 # is required. The value can be changed in Render with BOOKING_NOTIFICATION_URL.

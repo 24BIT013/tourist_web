@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Booking, Destination, GalleryImage, TourPackage
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage
 
 admin.site.site_header = 'Zanji Adventures Administration'
 admin.site.site_title = 'Zanji Adventures Admin'
@@ -73,3 +73,11 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.action(description='Mark selected bookings as cancelled')
     def mark_cancelled(self, request, queryset):
         queryset.update(status=Booking.Status.CANCELLED)
+
+
+@admin.register(Complaint)
+class ComplaintAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'message')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'

@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.test import override_settings
 from django.urls import reverse
 
-from .models import Booking, Destination, TourPackage
+from .models import Booking, Complaint, Destination, TourPackage
 
 
 class BookingNotificationTests(TestCase):
@@ -30,7 +30,7 @@ class BookingNotificationTests(TestCase):
     )
     def test_booking_sends_notification_and_returns_to_the_site(self, mock_urlopen):
         mock_urlopen.return_value.__enter__.return_value.status = 200
-        response = self.client.post(reverse('home'), {
+        response = self.client.post(reverse('packages'), {
             'guest_name': 'Amina Ali',
             'guest_email': 'amina@example.com',
             'guest_phone': '+255 700 000 000',
@@ -43,7 +43,7 @@ class BookingNotificationTests(TestCase):
             'special_requests': 'Airport pickup',
         })
 
-        self.assertRedirects(response, f'{reverse("home")}?booking=success#booking', fetch_redirect_response=False)
+        self.assertRedirects(response, f'{reverse("packages")}?booking=success#booking', fetch_redirect_response=False)
         mock_urlopen.assert_called_once()
         notification_request = mock_urlopen.call_args.args[0]
         self.assertEqual(notification_request.full_url, settings.BOOKING_NOTIFICATION_URL)
@@ -68,7 +68,7 @@ class BookingNotificationTests(TestCase):
     )
     def test_booking_returns_to_site_when_notification_delivery_fails(self, mock_urlopen):
         with self.assertLogs('tour_app.views', level='ERROR'):
-            response = self.client.post(reverse('home'), {
+            response = self.client.post(reverse('packages'), {
                 'guest_name': 'Amina Ali',
                 'guest_email': 'amina@example.com',
                 'package': self.package.pk,
@@ -77,7 +77,7 @@ class BookingNotificationTests(TestCase):
             })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, f'{reverse("home")}?booking=saved#booking')
+        self.assertEqual(response.url, f'{reverse("packages")}?booking=saved#booking')
         mock_urlopen.assert_called_once()
 
     @patch('tour_app.views.urlopen')
@@ -85,7 +85,7 @@ class BookingNotificationTests(TestCase):
     def test_booking_form_submits_with_the_rendered_required_fields(self, mock_urlopen):
         mock_urlopen.return_value.__enter__.return_value.status = 200
 
-        response = self.client.post(reverse('home'), {
+        response = self.client.post(reverse('packages'), {
             'guest_name': 'Amina Ali',
             'guest_email': 'amina@example.com',
             'package': self.package.pk,
@@ -95,10 +95,24 @@ class BookingNotificationTests(TestCase):
 
         self.assertRedirects(
             response,
-            f'{reverse("home")}?booking=success#booking',
+            f'{reverse("packages")}?booking=success#booking',
             fetch_redirect_response=False,
         )
         self.assertTrue(Booking.objects.filter(guest_email='amina@example.com').exists())
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class ContactTests(TestCase):
+    def test_contact_form_saves_a_complaint(self):
+        response = self.client.post(reverse('contact'), {
+            'name': 'Amina Ali',
+            'email': 'amina@example.com',
+            'phone': '+255 711 111 111',
+            'message': 'Please help with my tour booking.',
+        })
+
+        self.assertRedirects(response, f'{reverse("home")}#contact', fetch_redirect_response=False)
+        self.assertTrue(Complaint.objects.filter(email='amina@example.com').exists())
 
 
 @override_settings(SECURE_SSL_REDIRECT=False)

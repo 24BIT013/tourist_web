@@ -674,6 +674,80 @@ body {
     color: #c6dddb;
 }
 
+.contact-section {
+    margin-top: 42px;
+    padding: 34px 0 38px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
+    gap: 46px;
+}
+
+.contact-copy h3 {
+    margin: 12px 0;
+    font-size: 1.55rem;
+    line-height: 1.25;
+}
+
+.contact-copy p {
+    color: #b9dad6;
+    margin-bottom: 16px;
+}
+
+.contact-copy a {
+    color: #d9f3de;
+    display: block;
+    margin-top: 8px;
+}
+
+.contact-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.contact-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #d7e9e6;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.contact-form em {
+    font-style: normal;
+    font-weight: 400;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    border: 1px solid #568079;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    padding: 10px 12px;
+    font: inherit;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: #b9dad6;
+}
+
+.contact-message {
+    grid-column: 1 / -1;
+}
+
+.contact-form .btn {
+    justify-self: start;
+}
+
 .empty-state {
     background: white;
     padding: 34px;
@@ -1307,6 +1381,11 @@ body {
     }
 
     .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-section,
+    .contact-form {
         grid-template-columns: 1fr;
     }
 

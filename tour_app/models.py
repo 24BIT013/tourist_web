@@ -122,3 +122,18 @@ class Booking(models.Model):
     def __str__(self):
         package_label = self.package_name or (self.package.title if self.package else 'Tour')
         return f"{self.guest_name} - {package_label}"
+
+
+class Complaint(models.Model):
+    """A message submitted through the public contact section."""
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return f'Complaint from {self.name}'

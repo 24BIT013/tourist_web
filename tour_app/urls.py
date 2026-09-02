@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('packages/', views.packages, name='packages'),
     path('gallery/', views.gallery, name='gallery'),
+    path('contact/', views.contact, name='contact'),
     # Keep ID-based links working while public links use readable slugs.
     # This route must precede the slug route because a numeric ID is also a
     # valid slug.

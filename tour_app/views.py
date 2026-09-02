@@ -9,8 +9,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import BookingForm, DestinationForm, PackageForm
-from .models import Booking, Destination, GalleryImage, TourPackage
+from .forms import BookingForm, ComplaintForm, DestinationForm, PackageForm
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage
 
 
 logger = logging.getLogger(__name__)
@@ -83,10 +83,6 @@ def _booking_form(request, initial=None, redirect_url=None):
 
 
 def home(request):
-    booking_form, booking_response = _booking_form(request, redirect_url=reverse('home'))
-    if booking_response:
-        return booking_response
-
     # Show every published package on the homepage.  Previously only the
     # first three (with popular packages first) were rendered, which hid newly
     # created packages from visitors.
@@ -103,12 +99,21 @@ def home(request):
     context = {
         'packages': packages,
         'stats': stats,
-        'booking_form': booking_form,
-        'booking_packages': TourPackage.objects.order_by('title'),
-        'booking_action': reverse('home'),
-        'booking_notice': request.GET.get('booking'),
     }
     return render(request, 'tour_app/index.html', context)
+
+
+def contact(request):
+    if request.method != 'POST':
+        return redirect(f"{reverse('home')}#contact")
+
+    form = ComplaintForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Thank you. Your message has been sent to our support team.')
+    else:
+        messages.error(request, 'Please provide your name, a valid email address, and your message.')
+    return redirect(f"{reverse('home')}#contact")
 
 
 def packages(request):

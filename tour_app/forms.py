@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.text import slugify
 
-from .models import Booking, Destination, TourPackage, calculate_package_total
+from .models import Booking, Complaint, Destination, TourPackage, calculate_package_total
 
 
 def _unique_slug(model, value, instance=None):
@@ -124,3 +124,15 @@ class BookingForm(forms.ModelForm):
         if commit:
             booking.save()
         return booking
+
+
+class ComplaintForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['name', 'email', 'phone', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Your full name'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'you@example.com'}),
+            'phone': forms.TextInput(attrs={'placeholder': '+255 700 000 000 (optional)'}),
+            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tell us how we can help or describe your complaint.'}),
+        }
