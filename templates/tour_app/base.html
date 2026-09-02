@@ -19,7 +19,7 @@
                 <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}">Packages</a>
                 <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a>
                 <a href="{% url 'packages' %}#booking">Book a trip</a>
-                <a href="{% url 'home' %}#contact">Contact</a>
+                <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}
@@ -82,34 +82,16 @@
                 <a href="{% url 'packages' %}">All packages</a>
                 <a href="{% url 'gallery' %}">Photo gallery</a>
                 <a href="{% url 'home' %}#experiences">Experiences</a>
-                <a href="{% url 'home' %}#contact">Contact</a>
+                <a href="{% url 'contact' %}">Contact</a>
             </div>
             <div>
                 <h4>Support</h4>
                 <a href="{% url 'packages' %}#booking">Plan a trip</a>
-                <a href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp: +{{ whatsapp_phone_number }}</a>
-                <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+                <a href="{% url 'contact' %}">Contact us</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}
             </div>
-        </div>
-        <div class="container contact-section">
-            <div class="contact-copy">
-                <span class="eyebrow">Contact us</span>
-                <h3>Need support or want to make a complaint?</h3>
-                <p>Reach us on WhatsApp, email us directly, or send the form below. Our Zanzibar team will review your message and respond as soon as possible.</p>
-                <a href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp: +{{ whatsapp_phone_number }}</a>
-                <a href="mailto:{{ contact_email }}">Email: {{ contact_email }}</a>
-            </div>
-            <form class="contact-form" method="post" action="{% url 'contact' %}">
-                {% csrf_token %}
-                <label><span>Full name</span>{{ contact_form.name }}</label>
-                <label><span>Email address</span>{{ contact_form.email }}</label>
-                <label><span>Phone / WhatsApp <em>(optional)</em></span>{{ contact_form.phone }}</label>
-                <label class="contact-message"><span>Your message or complaint</span>{{ contact_form.message }}</label>
-                <button class="btn btn-primary" type="submit">Send message</button>
-            </form>
         </div>
         <div class="container footer-bottom">
             <span>Copyright 2026 Zanji Adventures. All rights reserved.</span>

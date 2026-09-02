@@ -1,0 +1,36 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Contact Zanji Adventures{% endblock %}
+
+{% block content %}
+<section class="section contact-page">
+    <div class="container contact-section">
+        <div class="contact-copy">
+            <span class="eyebrow">Contact us</span>
+            <h1>We are here to help</h1>
+            <p>For tour questions, travel support, or complaints, contact our Zanzibar team directly or send us a message below.</p>
+            <a href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}" target="_blank" rel="noopener">WhatsApp: +{{ whatsapp_phone_number }}</a>
+            <a href="mailto:{{ contact_email }}">Email: {{ contact_email }}</a>
+        </div>
+        <form class="contact-form" method="post" action="{% url 'contact' %}">
+            {% csrf_token %}
+            {% if contact_notice == 'success' %}
+                <div class="booking-confirmation contact-message" role="status">
+                    <strong>Thank you. Your message has been sent.</strong>
+                    <span>Our team will reply as soon as possible.</span>
+                </div>
+            {% elif contact_notice == 'saved' %}
+                <div class="booking-confirmation booking-confirmation-warning contact-message" role="status">
+                    <strong>Your message was saved.</strong>
+                    <span>We could not confirm email delivery yet, but our team can still see it.</span>
+                </div>
+            {% endif %}
+            <label><span>Full name</span>{{ contact_form.name }}{% for error in contact_form.name.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+            <label><span>Email address</span>{{ contact_form.email }}{% for error in contact_form.email.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+            <label><span>Phone / WhatsApp <em>(optional)</em></span>{{ contact_form.phone }}</label>
+            <label class="contact-message"><span>Your message or complaint</span>{{ contact_form.message }}{% for error in contact_form.message.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+            <button class="btn btn-primary" type="submit">Send message</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

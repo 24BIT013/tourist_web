@@ -1,6 +1,5 @@
 from django.conf import settings
 
-from .forms import ComplaintForm
 
 
 def site_settings(request):
@@ -15,5 +14,4 @@ def site_settings(request):
             'WHATSAPP_DEFAULT_MESSAGE',
             'Hello, I would like more information about your travel packages.',
         ),
-        'contact_form': ComplaintForm(),
     }

@@ -82,6 +82,40 @@ def _booking_form(request, initial=None, redirect_url=None):
     return form, None
 
 
+def _send_complaint_notification(complaint):
+    """Email a contact or complaint through the configured FormSubmit inbox."""
+    form_data = {
+        '_subject': f'New contact message from {complaint.name}',
+        '_template': 'table',
+        '_captcha': 'false',
+        '_replyto': complaint.email,
+        'email': complaint.email,
+        '_next': f'{settings.BOOKING_SITE_URL.rstrip("/")}{reverse("contact")}',
+        'Customer name': complaint.name,
+        'Customer email': complaint.email,
+        'Phone / WhatsApp': complaint.phone or 'Not provided',
+        'Message or complaint': complaint.message,
+    }
+    request = Request(
+        settings.CONTACT_NOTIFICATION_URL,
+        data=urlencode(form_data).encode('utf-8'),
+        headers={
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': settings.BOOKING_SITE_URL,
+            'User-Agent': 'Zanji Adventures contact notifications',
+        },
+        method='POST',
+    )
+    try:
+        with urlopen(request, timeout=10) as response:
+            if not 200 <= response.status < 400:
+                raise RuntimeError(f'FormSubmit returned HTTP {response.status}')
+        return True
+    except Exception:
+        logger.exception('Unable to send contact notification through FormSubmit.')
+        return False
+
+
 def home(request):
     # Show every published package on the homepage.  Previously only the
     # first three (with popular packages first) were rendered, which hid newly
@@ -104,16 +138,17 @@ def home(request):
 
 
 def contact(request):
-    if request.method != 'POST':
-        return redirect(f"{reverse('home')}#contact")
+    form = ComplaintForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        complaint = form.save()
+        notification_sent = _send_complaint_notification(complaint)
+        notice = 'success' if notification_sent else 'saved'
+        return redirect(f"{reverse('contact')}?contact={notice}")
 
-    form = ComplaintForm(request.POST)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Thank you. Your message has been sent to our support team.')
-    else:
-        messages.error(request, 'Please provide your name, a valid email address, and your message.')
-    return redirect(f"{reverse('home')}#contact")
+    return render(request, 'tour_app/contact.html', {
+        'contact_form': form,
+        'contact_notice': request.GET.get('contact'),
+    })
 
 
 def packages(request):

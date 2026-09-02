@@ -127,6 +127,9 @@ CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'burminho098@gmail.com')
 BOOKING_NOTIFICATION_URL = os.environ.get(
     'BOOKING_NOTIFICATION_URL', 'https://formsubmit.co/burminho098@gmail.com'
 )
+CONTACT_NOTIFICATION_URL = os.environ.get(
+    'CONTACT_NOTIFICATION_URL', BOOKING_NOTIFICATION_URL
+)
 BOOKING_SITE_URL = os.environ.get(
     'BOOKING_SITE_URL', 'https://abdishan12.vercel.app/'
 )

@@ -103,7 +103,9 @@ class BookingNotificationTests(TestCase):
 
 @override_settings(SECURE_SSL_REDIRECT=False)
 class ContactTests(TestCase):
-    def test_contact_form_saves_a_complaint(self):
+    @patch('tour_app.views.urlopen')
+    def test_contact_form_saves_and_emails_a_complaint(self, mock_urlopen):
+        mock_urlopen.return_value.__enter__.return_value.status = 200
         response = self.client.post(reverse('contact'), {
             'name': 'Amina Ali',
             'email': 'amina@example.com',
@@ -111,8 +113,12 @@ class ContactTests(TestCase):
             'message': 'Please help with my tour booking.',
         })
 
-        self.assertRedirects(response, f'{reverse("home")}#contact', fetch_redirect_response=False)
+        self.assertRedirects(response, f'{reverse("contact")}?contact=success', fetch_redirect_response=False)
         self.assertTrue(Complaint.objects.filter(email='amina@example.com').exists())
+        mock_urlopen.assert_called_once()
+        notification_data = parse_qs(mock_urlopen.call_args.args[0].data.decode('utf-8'))
+        self.assertEqual(notification_data['Customer email'], ['amina@example.com'])
+        self.assertEqual(notification_data['Message or complaint'], ['Please help with my tour booking.'])
 
 
 @override_settings(SECURE_SSL_REDIRECT=False)

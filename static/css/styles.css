@@ -683,6 +683,24 @@ body {
     gap: 46px;
 }
 
+.contact-page {
+    background: linear-gradient(135deg, #183d3b, #244a55);
+}
+
+.contact-page .contact-section {
+    margin-top: 0;
+    padding: 52px;
+    border: 0;
+    border-radius: 30px;
+    background: #0c312f;
+}
+
+.contact-copy h1 {
+    margin: 12px 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.15;
+}
+
 .contact-copy h3 {
     margin: 12px 0;
     font-size: 1.55rem;
