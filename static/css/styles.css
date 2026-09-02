@@ -504,7 +504,35 @@ body {
 }
 
 .booking {
-    background: linear-gradient(135deg, #183d3b, #244a55);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-image: url("../images/tours/quad-biking-in-zanzibar.png");
+    background-position: center;
+    background-size: cover;
+    animation: booking-background-slider 12s ease-in-out infinite;
+}
+
+.booking::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(8, 39, 37, 0.28);
+}
+
+@keyframes booking-background-slider {
+    0%, 45% {
+        background-image: url("../images/tours/quad-biking-in-zanzibar.png");
+    }
+
+    50%, 95% {
+        background-image: url("../images/gallery/kayaking.jpg");
+    }
+
+    100% {
+        background-image: url("../images/tours/quad-biking-in-zanzibar.png");
+    }
 }
 
 .booking-panel {
