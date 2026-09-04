@@ -124,14 +124,14 @@ body {
     font-size: clamp(3rem, 5.8vw, 4.9rem);
     line-height: 0.98;
     letter-spacing: -0.06em;
-    color: #173b39;
+    color: white;
     margin-top: 16px;
 }
 
 .hero-copy {
     font-size: 1.08rem;
     line-height: 1.85;
-    color: #526b69;
+    color: white;
     max-width: 660px;
     margin: 30px 0 36px;
 }
@@ -140,6 +140,10 @@ body {
     display: flex;
     gap: 14px;
     align-items: center;
+}
+
+.hero .eyebrow {
+    color: white;
 }
 
 .hero-proof {
