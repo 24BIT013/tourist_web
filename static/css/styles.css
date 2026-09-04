@@ -108,7 +108,9 @@ body {
 }
 
 .hero {
-    background: url("../images/saaa.png") center / cover no-repeat;
+    background:
+        linear-gradient(rgba(11, 71, 65, 0.62), rgba(11, 71, 65, 0.62)),
+        url("../images/saaa.png") center / cover no-repeat;
 }
 
 .hero-grid {
@@ -703,7 +705,9 @@ body {
 }
 
 .transport-section {
-    background: url("../images/qd.png") center / cover no-repeat;
+    background:
+        linear-gradient(rgba(16, 93, 68, 0.72), rgba(16, 93, 68, 0.72)),
+        url("../images/qd.png") center / cover no-repeat;
 }
 
 .transport-copy h2,
@@ -728,6 +732,13 @@ body {
 
 .transport-benefits strong {
     color: #164b4e;
+}
+
+.transport-copy h2,
+.transport-copy > p,
+.transport-benefits p,
+.transport-benefits strong {
+    color: white;
 }
 
 .transport-form-card {
