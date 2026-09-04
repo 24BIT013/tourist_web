@@ -15,16 +15,22 @@
                 <span>Zanji Adventures</span>
             </a>
             <nav class="main-nav">
-                <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}">Packages</a>
-                <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a>
-                <a href="{% url 'packages' %}#booking">Book a trip</a>
-                <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
+                <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}" data-i18n="nav.home">Home</a>
+                <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}" data-i18n="nav.packages">Packages</a>
+                <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}" data-i18n="nav.gallery">Gallery</a>
+                <a href="{% url 'packages' %}#booking" data-i18n="nav.book">Book a trip</a>
+                <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}" data-i18n="nav.contact">Contact</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}
             </nav>
-            <a class="btn btn-primary nav-btn" href="{% url 'packages' %}#booking">Plan a trip</a>
+            <div class="nav-actions">
+                <div class="language-switcher" aria-label="Language selector">
+                    <button type="button" class="language-button is-active" data-language="en" aria-pressed="true">EN</button>
+                    <button type="button" class="language-button" data-language="sw" aria-pressed="false">SW</button>
+                </div>
+                <a class="btn btn-primary nav-btn" href="{% url 'packages' %}#booking" data-i18n="nav.plan">Plan a trip</a>
+            </div>
         </div>
     </header>
 
@@ -46,17 +52,17 @@
     >
         <button class="whatsapp-fab" type="button" aria-expanded="false">
             <span class="whatsapp-fab-badge">WA</span>
-            <span class="whatsapp-fab-text">WhatsApp chat</span>
+            <span class="whatsapp-fab-text" data-i18n="whatsapp.chat">WhatsApp chat</span>
         </button>
         <div class="whatsapp-panel" hidden>
-            <p>Need help planning a trip? Chat with us on WhatsApp and we will reply quickly.</p>
+            <p data-i18n="whatsapp.help">Need help planning a trip? Chat with us on WhatsApp and we will reply quickly.</p>
             <a
                 class="btn btn-primary"
                 target="_blank"
                 rel="noopener"
                 href="https://api.whatsapp.com/send?phone={{ whatsapp_phone_number }}&amp;text={{ whatsapp_default_message|urlencode }}"
             >
-                Start chat
+                <span data-i18n="whatsapp.start">Start chat</span>
             </a>
         </div>
     </div>

@@ -1,4 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const translations = {
+        en: {
+            'nav.home': 'Home', 'nav.packages': 'Packages', 'nav.gallery': 'Gallery',
+            'nav.book': 'Book a trip', 'nav.contact': 'Contact', 'nav.plan': 'Plan a trip',
+            'whatsapp.chat': 'WhatsApp chat', 'whatsapp.help': 'Need help planning a trip? Chat with us on WhatsApp and we will reply quickly.',
+            'whatsapp.start': 'Start chat', 'home.eyebrow': 'Explore the world differently',
+            'home.title': 'Find your next unforgettable adventure.',
+            'home.copy': 'Discover curated journeys, local stories, beautiful stays, and moments that change the way you see the world.',
+            'home.explore': 'Explore tours', 'home.how': 'How it works',
+        },
+        sw: {
+            'nav.home': 'Nyumbani', 'nav.packages': 'Ziara', 'nav.gallery': 'Picha',
+            'nav.book': 'Weka nafasi', 'nav.contact': 'Wasiliana nasi', 'nav.plan': 'Panga safari',
+            'whatsapp.chat': 'Ongea nasi WhatsApp', 'whatsapp.help': 'Unahitaji msaada kupanga safari? Ongea nasi kupitia WhatsApp na tutajibu haraka.',
+            'whatsapp.start': 'Anza mazungumzo', 'home.eyebrow': 'Gundua dunia kwa namna tofauti',
+            'home.title': 'Pata safari yako ijayo isiyosahaulika.',
+            'home.copy': 'Gundua safari zilizopangwa, hadithi za wenyeji, malazi mazuri na nyakati zinazobadilisha jinsi unavyoiona dunia.',
+            'home.explore': 'Chunguza ziara', 'home.how': 'Jinsi inavyofanya kazi',
+        },
+    };
+
+    const applyLanguage = (language) => {
+        const dictionary = translations[language] || translations.en;
+        document.documentElement.lang = language;
+        document.querySelectorAll('[data-i18n]').forEach((element) => {
+            const translation = dictionary[element.dataset.i18n];
+            if (translation) element.textContent = translation;
+        });
+        document.querySelectorAll('[data-language]').forEach((button) => {
+            const isActive = button.dataset.language === language;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+        localStorage.setItem('zanji-language', language);
+    };
+
+    document.querySelectorAll('[data-language]').forEach((button) => {
+        button.addEventListener('click', () => applyLanguage(button.dataset.language));
+    });
+    applyLanguage(localStorage.getItem('zanji-language') || 'en');
+
     document.querySelectorAll('.booking-form').forEach((form) => {
         const packageSelect = form.querySelector('[data-price-selector]');
         const travelersInput = form.querySelector('#id_travelers');
