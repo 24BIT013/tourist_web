@@ -26,7 +26,7 @@
             </nav>
             <div class="nav-actions">
                 <label class="language-switcher" for="language-select">
-                    <span class="visually-hidden">Choose language</span>
+                    <span class="visually-hidden">language</span>
                     <select id="language-select" data-language-select aria-label="Choose language">
                         <option value="en">English</option>
                         <option value="es">Español</option>
@@ -38,7 +38,7 @@
                         <option value="pt">Português</option>
                     </select>
                 </label>
-                <a class="btn btn-primary nav-btn" href="{% url 'packages' %}#booking" data-i18n="nav.plan">Plan a trip</a>
+                <a class="btn btn-primary nav-btn" href="{% url 'packages' %}#booking" data-i18n="nav.plan"></a>
             </div>
         </div>
     </header>
@@ -101,7 +101,7 @@
             </div>
             <div>
                 <h4>Support</h4>
-                <a href="{% url 'packages' %}#booking"></a>
+                <a href="{% url 'packages' %}#booking">Booking</a>
                 <a href="{% url 'contact' %}">Contact us</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
