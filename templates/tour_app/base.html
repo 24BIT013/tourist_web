@@ -18,7 +18,7 @@
                 <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}" data-i18n="nav.home">Home</a>
                 <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}" data-i18n="nav.packages">Packages</a>
                 <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}" data-i18n="nav.gallery">Gallery</a>
-                <a href="{% url 'packages' %}#booking" data-i18n="nav.book">Book a trip</a>
+                <a href="{% url 'packages' %}#booking" data-i18n="nav.book">Booking</a>
                 <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}" data-i18n="nav.contact">Contact</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
@@ -101,7 +101,7 @@
             </div>
             <div>
                 <h4>Support</h4>
-                <a href="{% url 'packages' %}#booking">Plan a trip</a>
+                <a href="{% url 'packages' %}#booking"></a>
                 <a href="{% url 'contact' %}">Contact us</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
