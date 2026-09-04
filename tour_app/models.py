@@ -124,6 +124,31 @@ class Booking(models.Model):
         return f"{self.guest_name} - {package_label}"
 
 
+class TransportBooking(models.Model):
+    class VehicleType(models.TextChoices):
+        CAR = 'car', 'Private car'
+        VAN = 'van', 'Private van'
+        SUV = 'suv', 'SUV / 4x4'
+
+    guest_name = models.CharField(max_length=120)
+    guest_email = models.EmailField()
+    guest_phone = models.CharField(max_length=30)
+    pickup_location = models.CharField(max_length=200)
+    dropoff_location = models.CharField(max_length=200)
+    pickup_date = models.DateField()
+    pickup_time = models.TimeField()
+    passengers = models.PositiveIntegerField(default=1)
+    vehicle_type = models.CharField(max_length=20, choices=VehicleType.choices, default=VehicleType.CAR)
+    special_requests = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return f"{self.guest_name} — {self.pickup_location} to {self.dropoff_location}"
+
+
 class Complaint(models.Model):
     """A message submitted through the public contact section."""
     name = models.CharField(max_length=120)

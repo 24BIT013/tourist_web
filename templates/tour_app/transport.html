@@ -1,0 +1,50 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Transport Services | Zanji Adventures{% endblock %}
+
+{% block content %}
+<section class="transport-hero">
+    <div class="container">
+        <span class="eyebrow">Zanzibar transport</span>
+        <h1>Book a comfortable ride.</h1>
+        <p>Arrange a reliable private transfer for airport arrivals, hotel pickups, tours, and travel anywhere on Zanzibar.</p>
+    </div>
+</section>
+
+<section class="section transport-section" id="transport-booking">
+    <div class="container transport-grid">
+        <div class="transport-copy">
+            <h2>Travel on your schedule</h2>
+            <p>Tell us where and when you need to go. Our team will confirm your ride and price directly with you.</p>
+            <div class="transport-benefits">
+                <p><strong>Airport transfers</strong><br>Meet-and-greet service from Zanzibar airport.</p>
+                <p><strong>Private drivers</strong><br>Flexible rides for hotels, beaches, and island tours.</p>
+                <p><strong>Simple confirmation</strong><br>We will contact you using the details below.</p>
+            </div>
+        </div>
+
+        <div class="transport-form-card">
+            <h2>Request transport</h2>
+            {% if transport_notice == 'success' %}
+                <div class="booking-confirmation" role="status"><strong>Thank you! Your transport request has been sent.</strong><span>We will confirm your ride shortly.</span></div>
+            {% elif transport_notice == 'saved' %}
+                <div class="booking-confirmation booking-confirmation-warning" role="status"><strong>Your request has been saved.</strong><span>Our team can still see it and will contact you.</span></div>
+            {% endif %}
+            <form method="post" class="transport-form">
+                {% csrf_token %}
+                {% if transport_form.errors %}<div class="form-errors" role="alert"><p>Please correct the highlighted details and try again.</p></div>{% endif %}
+                <div class="form-grid">
+                    {% for field in transport_form %}
+                        <label class="form-field {% if field.name == 'special_requests' %}form-field-wide{% endif %}">
+                            <span>{{ field.label }}</span>
+                            {{ field }}
+                            {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                        </label>
+                    {% endfor %}
+                </div>
+                <div class="booking-form-footer"><button class="btn btn-primary" type="submit">Request transport</button></div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -19,6 +19,7 @@
                 <a class="{% if request.resolver_match.url_name == 'packages' or request.resolver_match.url_name == 'package_detail' %}active{% endif %}" href="{% url 'packages' %}" data-i18n="nav.packages">Packages</a>
                 <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}" data-i18n="nav.gallery">Gallery</a>
                 <a href="{% url 'packages' %}#booking" data-i18n="nav.book">Booking</a>
+                <a class="{% if request.resolver_match.url_name == 'transport' %}active{% endif %}" href="{% url 'transport' %}">Transport</a>
                 <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}" data-i18n="nav.contact">Contact</a>
                 {% if user.is_staff %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
@@ -38,7 +39,6 @@
                         <option value="pt">Português</option>
                     </select>
                 </label>
-                <a class="btn btn-primary nav-btn" href="{% url 'packages' %}#booking" data-i18n="nav.plan"></a>
             </div>
         </div>
     </header>
@@ -91,12 +91,14 @@
                 <a href="{% url 'packages' %}">Packages</a>
                 <a href="{% url 'gallery' %}">Gallery</a>
                 <a href="{% url 'packages' %}#booking">Booking</a>
+                <a href="{% url 'transport' %}">Transport</a>
             </div>
             <div>
                 <h4>Explore</h4>
                 <a href="{% url 'packages' %}">All packages</a>
                 <a href="{% url 'gallery' %}">Photo gallery</a>
                 <a href="{% url 'home' %}#experiences">Experiences</a>
+                <a href="{% url 'transport' %}">Transport services</a>
                 <a href="{% url 'contact' %}">Contact</a>
             </div>
             <div>

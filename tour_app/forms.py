@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.text import slugify
 
-from .models import Booking, Complaint, Destination, TourPackage, calculate_package_total
+from .models import Booking, Complaint, Destination, TourPackage, TransportBooking, calculate_package_total
 
 
 def _unique_slug(model, value, instance=None):
@@ -124,6 +124,28 @@ class BookingForm(forms.ModelForm):
         if commit:
             booking.save()
         return booking
+
+
+class TransportBookingForm(forms.ModelForm):
+    class Meta:
+        model = TransportBooking
+        fields = [
+            'guest_name', 'guest_email', 'guest_phone', 'pickup_location',
+            'dropoff_location', 'pickup_date', 'pickup_time', 'passengers',
+            'vehicle_type', 'special_requests',
+        ]
+        widgets = {
+            'guest_name': forms.TextInput(attrs={'placeholder': 'Your full name'}),
+            'guest_email': forms.EmailInput(attrs={'placeholder': 'you@example.com'}),
+            'guest_phone': forms.TextInput(attrs={'placeholder': '+255 700 000 000'}),
+            'pickup_location': forms.TextInput(attrs={'placeholder': 'e.g. Abeid Amani Karume Airport'}),
+            'dropoff_location': forms.TextInput(attrs={'placeholder': 'e.g. Nungwi Beach hotel'}),
+            'pickup_date': forms.DateInput(attrs={'type': 'date'}),
+            'pickup_time': forms.TimeInput(attrs={'type': 'time'}),
+            'passengers': forms.NumberInput(attrs={'min': 1, 'max': 50}),
+            'vehicle_type': forms.Select(attrs={'class': 'form-select'}),
+            'special_requests': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Flight number, child seats, luggage, or other requests'}),
+        }
 
 
 class ComplaintForm(forms.ModelForm):

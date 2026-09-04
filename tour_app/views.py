@@ -9,8 +9,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import BookingForm, ComplaintForm, DestinationForm, PackageForm
-from .models import Booking, Complaint, Destination, GalleryImage, TourPackage
+from .forms import BookingForm, ComplaintForm, DestinationForm, PackageForm, TransportBookingForm
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking
 
 
 logger = logging.getLogger(__name__)
@@ -116,6 +116,42 @@ def _send_complaint_notification(complaint):
         return False
 
 
+def _send_transport_notification(booking):
+    """Send a transport request to the same configured booking mailbox."""
+    form_data = {
+        '_subject': 'New transport booking request',
+        '_template': 'table',
+        '_captcha': 'false',
+        '_replyto': booking.guest_email,
+        'email': booking.guest_email,
+        '_next': f'{settings.BOOKING_SITE_URL.rstrip("/")}{reverse("transport")}',
+        'Customer name': booking.guest_name,
+        'Customer email': booking.guest_email,
+        'Phone number': booking.guest_phone,
+        'Pickup location': booking.pickup_location,
+        'Drop-off location': booking.dropoff_location,
+        'Pickup date': booking.pickup_date,
+        'Pickup time': booking.pickup_time,
+        'Passengers': booking.passengers,
+        'Vehicle preference': booking.get_vehicle_type_display(),
+        'Special requests': booking.special_requests or 'None',
+    }
+    request = Request(
+        settings.BOOKING_NOTIFICATION_URL,
+        data=urlencode(form_data).encode('utf-8'),
+        headers={'Content-Type': 'application/x-www-form-urlencoded', 'Referer': settings.BOOKING_SITE_URL, 'User-Agent': 'Zanji Adventures transport bookings'},
+        method='POST',
+    )
+    try:
+        with urlopen(request, timeout=10) as response:
+            if not 200 <= response.status < 400:
+                raise RuntimeError(f'FormSubmit returned HTTP {response.status}')
+        return True
+    except Exception:
+        logger.exception('Unable to send transport notification through FormSubmit.')
+        return False
+
+
 def home(request):
     # Show every published package on the homepage.  Previously only the
     # first three (with popular packages first) were rendered, which hid newly
@@ -148,6 +184,20 @@ def contact(request):
     return render(request, 'tour_app/contact.html', {
         'contact_form': form,
         'contact_notice': request.GET.get('contact'),
+    })
+
+
+def transport(request):
+    form = TransportBookingForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        booking = form.save()
+        notification_sent = _send_transport_notification(booking)
+        notice = 'success' if notification_sent else 'saved'
+        return redirect(f"{reverse('transport')}?transport={notice}#transport-booking")
+
+    return render(request, 'tour_app/transport.html', {
+        'transport_form': form,
+        'transport_notice': request.GET.get('transport'),
     })
 
 
@@ -205,11 +255,13 @@ def dashboard(request):
         booking_count=Count('bookings')
     ).order_by('-created_at')
     bookings = Booking.objects.select_related('package').order_by('-created_at')
+    transport_bookings = TransportBooking.objects.all()
 
     context = {
         'packages': packages,
         'destinations': Destination.objects.annotate(package_count=Count('packages')).order_by('name'),
         'bookings': bookings,
+        'transport_bookings': transport_bookings,
         'stats': {
             'packages': packages.count(),
             'bookings': bookings.count(),

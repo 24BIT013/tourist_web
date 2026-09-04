@@ -100,6 +100,37 @@
         <article class="dashboard-panel">
             <div class="section-head split">
                 <div>
+                    <span class="eyebrow">Transport</span>
+                    <h2>Transport requests</h2>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table class="dashboard-table bookings-table">
+                    <thead>
+                        <tr><th>Customer</th><th>Contact</th><th>Route</th><th>Pickup</th><th>Passengers</th><th>Vehicle</th><th>Requests</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in transport_bookings %}
+                            <tr>
+                                <td><strong>{{ booking.guest_name }}</strong></td>
+                                <td><div>{{ booking.guest_email }}</div><div class="muted">{{ booking.guest_phone }}</div></td>
+                                <td><div>{{ booking.pickup_location }}</div><div class="muted">to {{ booking.dropoff_location }}</div></td>
+                                <td><div>{{ booking.pickup_date }}</div><div class="muted">{{ booking.pickup_time }}</div></td>
+                                <td>{{ booking.passengers }}</td>
+                                <td>{{ booking.get_vehicle_type_display }}</td>
+                                <td class="request-cell">{{ booking.special_requests|default:"-" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="7" class="table-empty">No transport requests have been submitted yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="dashboard-panel">
+            <div class="section-head split">
+                <div>
                     <span class="eyebrow">Destinations</span>
                     <h2>Destination library</h2>
                 </div>
