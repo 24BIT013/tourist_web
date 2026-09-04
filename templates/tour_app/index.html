@@ -7,28 +7,14 @@
 <section class="hero">
     <div class="container hero-grid">
         <div class="hero-content">
-            <span class="eyebrow">Explore the Zanji adventures</span>
-            <h1>Find your next unforgettable Zanji adventure.</h1>
-            <p class="hero-copy">
-                Discover Zanzibar: where every wave tells a story and every step leads to wonderfull Zanji adventures designs authentic: beach escapes, spice routes and transfers  that flow as smoothly as the tides
+            <span class="eyebrow" data-i18n="home.eyebrow">Explore Zanji adventures</span>
+            <h1 data-i18n="home.title">Find your next unforgettable Zanji adventure.</h1>
+            <p class="hero-copy" data-i18n="home.copy">
+                Discover Zanzibar, where every wave tells a story and every step leads to an authentic adventure: beach escapes, spice routes, and seamless transfers.
             </p>
             <div class="hero-actions">
-                <a href="{% url 'packages' %}" class="btn btn-primary">Explore tours</a>
-                <a href="{% url 'home' %}#experiences" class="btn btn-secondary">How it works</a>
-            </div>
-            <div class="hero-proof">
-                <div>
-                    <strong></strong>
-                    <span>happy travelers</span>
-                </div>
-                <div>
-                    <strong></strong>
-                    <span>destinations</span>
-                </div>
-                <div>
-                    <strong></strong>
-                    <span>expert guides</span>
-                </div>
+                <a href="{% url 'packages' %}" class="btn btn-primary" data-i18n="home.explore">Explore tours</a>
+                <a href="{% url 'home' %}#experiences" class="btn btn-secondary" data-i18n="home.how">How it works</a>
             </div>
         </div>
 
@@ -125,14 +111,9 @@
     </div>
 </section>
 
-<section class="section stats-band">
-    <div class="container stat-grid">
-        {% for stat in stats %}
-            <article class="stat-item">
-                <span class="stat-value">{{ stat.value }}</span>
-                <span class="stat-label">{{ stat.label }}</span>
-            </article>
-        {% endfor %}
+<section class="section tours-intro">
+    <div class="container">
+        <p data-i18n="home.tours_intro">Our tours are thoughtfully planned for every kind of traveller, combining Zanzibar's beaches, culture, nature, and local flavours into relaxed, memorable days.</p>
     </div>
 </section>
 
