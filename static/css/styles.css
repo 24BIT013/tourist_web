@@ -108,9 +108,7 @@ body {
 }
 
 .hero {
-    background:
-        linear-gradient(90deg, rgba(238, 251, 248, 0.94) 0%, rgba(238, 251, 248, 0.84) 44%, rgba(238, 251, 248, 0.20) 100%),
-        url("../images/saaa.png") center / cover no-repeat;
+    background: url("../images/saaa.png") center / cover no-repeat;
 }
 
 .hero-grid {
@@ -698,6 +696,10 @@ body {
     grid-template-columns: 0.75fr 1.25fr;
     gap: 56px;
     align-items: start;
+}
+
+.transport-section {
+    background: url("../images/qd.png") center / cover no-repeat;
 }
 
 .transport-copy h2,
