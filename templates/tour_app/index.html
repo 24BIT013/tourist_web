@@ -71,6 +71,10 @@
 </section>
 
 <section class="section packages-section" id="packages">
+    <div class="packages-background" aria-hidden="true">
+        <img src="{% static 'images/tau.png' %}" alt="">
+        <img src="{% static 'images/sp.png' %}" alt="">
+    </div>
     <div class="container">
         <div class="section-head split">
             <div>
@@ -147,7 +151,11 @@
             </div>
         </div>
         <div class="image-stack">
-            <img class="main-image" src="{% static 'images/gallery/quad.jpg' %}" alt="Quad biking adventure in Zanzibar">
+            <div class="support-image-slider" aria-label="Zanzibar travel experiences">
+                <img class="main-image" src="{% static 'images/sp.png' %}" alt="Zanzibar travel experience">
+                <img class="main-image" src="{% static 'images/tau.png' %}" alt="Zanzibar travel experience">
+                <img class="main-image" src="{% static 'images/foro.png' %}" alt="Zanzibar travel experience">
+            </div>
             <div class="mini-card">
                 <span class="icon-feature">LS</span>
                 <div>
