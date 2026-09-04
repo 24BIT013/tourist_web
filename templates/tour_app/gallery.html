@@ -1,6 +1,6 @@
 {% extends 'tour_app/base.html' %}
 
-{% block title %}Zanji Adventures | Gallery{% endblock %}
+{% block title %}Zenji Adventures | Gallery{% endblock %}
 
 {% block content %}
 <section class="section gallery-page">
@@ -8,15 +8,15 @@
         <div class="section-head centered">
             <span class="eyebrow">Zanzibar moments</span>
             <h1>Our gallery</h1>
-            <p>Add and manage photographs from the Zanji Adventures admin area.</p>
+            <p>Add and manage photographs from the Zenji Adventures admin area.</p>
         </div>
 
-        <div class="gallery-slider" data-gallery-slider aria-label="Zanji Adventures photo gallery" tabindex="0">
+        <div class="gallery-slider" data-gallery-slider aria-label="Zenji Adventures photo gallery" tabindex="0">
             <div class="gallery-viewport">
                 <div class="gallery-track">
             {% for photo in gallery_images %}
                 <figure class="gallery-card gallery-slide" data-gallery-slide aria-hidden="{% if not forloop.first %}true{% else %}false{% endif %}">
-                    <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zanji Adventures gallery image' }}">
+                    <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zenji Adventures gallery image' }}">
                     {% if photo.title or photo.caption %}
                         <figcaption>
                             {% if photo.title %}<h2>{{ photo.title }}</h2>{% endif %}
