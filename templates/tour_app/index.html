@@ -33,7 +33,13 @@
                     </div>
                 </div>
                 <div class="floating-card floating-card-two">
-                    <span class="icon">4.9</span>
+                    <div class="rating-image-slider" aria-hidden="true">
+                        <img src="{% static 'images/hamn.png' %}" alt="">
+                        <img src="{% static 'images/gallery/quad.jpg' %}" alt="">
+                        <img src="{% static 'images/spice-farm.png' %}" alt="">
+                        <img src="{% static 'images/kongwe.png' %}" alt="">
+                        <img src="{% static 'images/kobe.png' %}" alt="">
+                    </div>
                     <div>
                         <p class="label">Travel rating</p>
                         <p class="value">Guest favorite</p>
@@ -88,7 +94,11 @@
             {% for package in packages %}
                 <article class="package-card">
                     <div class="package-image">
-                        <img src="{{ package.image_display_url|default:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80' }}" alt="{{ package.title }}">
+                        <div class="package-image-slider" aria-hidden="true">
+                            <img src="{% static 'images/hamn.png' %}" alt="">
+                            <img src="{% static 'images/saaa.png' %}" alt="">
+                            <img src="{% static 'images/tau.png' %}" alt="">
+                        </div>
                         <span class="badge">{{ package.country }}</span>
                     </div>
                     <div class="package-content">
@@ -155,6 +165,8 @@
                 <img class="main-image" src="{% static 'images/sp.png' %}" alt="Zanzibar travel experience">
                 <img class="main-image" src="{% static 'images/tau.png' %}" alt="Zanzibar travel experience">
                 <img class="main-image" src="{% static 'images/foro.png' %}" alt="Zanzibar travel experience">
+                <img class="main-image" src="{% static 'images/saaa.png' %}" alt="Zanzibar travel experience">
+                <img class="main-image" src="{% static 'images/qd.png' %}" alt="Zanzibar travel experience">
             </div>
             <div class="mini-card">
                 <span class="icon-feature">LS</span>
