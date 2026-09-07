@@ -59,6 +59,28 @@ class TourPackage(models.Model):
             return static(self.image)
         return self.image
 
+    @property
+    def slideshow_images(self):
+        """Photos shown in the automatic card slideshow for multi-stop tours."""
+        tour_slides = {
+            'nakupenda-prison-island-stone-town-full-day-tour': (
+                'images/tours/nakupenda.png',
+                'images/tours/kobe.png',
+                'images/tours/hamn.png',
+            ),
+            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour': (
+                'images/tours/sn.jpg',
+                'images/tours/sun.png',
+                'images/tours/zanzibar-clear-kayak.png',
+            ),
+            'spice-farm-prison-island-full-day-tour': (
+                'images/tours/hamn.png',
+                'images/tours/kobe.png',
+                'images/tours/sp.png',
+            ),
+        }
+        return tour_slides.get(self.slug, (self.image,))
+
 
 class GalleryImage(models.Model):
     """A photograph displayed on the public gallery page."""
