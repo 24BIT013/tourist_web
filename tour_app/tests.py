@@ -123,22 +123,34 @@ class ContactTests(TestCase):
 
 @override_settings(SECURE_SSL_REDIRECT=False)
 class PublicPackagesTests(TestCase):
-    def test_homepage_shows_all_packages_including_new_packages(self):
-        for number in range(4):
+    def test_homepage_shows_only_the_selected_popular_packages(self):
+        homepage_slugs = (
+            'spice-farm-prison-island-full-day-tour',
+            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour',
+            'nakupenda-prison-island-stone-town-full-day-tour',
+        )
+        for number, slug in enumerate(homepage_slugs):
             TourPackage.objects.create(
                 title=f'Package {number}',
-                slug=f'package-{number}',
+                slug=slug,
                 country='Tanzania',
                 duration='3 days',
                 price='$500',
             )
+        TourPackage.objects.create(
+            title='Other package',
+            slug='other-package',
+            country='Tanzania',
+            duration='3 days',
+            price='$500',
+        )
 
         response = self.client.get(reverse('home'))
 
         self.assertContains(response, 'Package 0')
         self.assertContains(response, 'Package 1')
         self.assertContains(response, 'Package 2')
-        self.assertContains(response, 'Package 3')
+        self.assertNotContains(response, 'Other package')
 
     def test_numeric_package_url_redirects_to_the_package_slug(self):
         package = TourPackage.objects.create(

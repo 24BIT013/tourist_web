@@ -153,12 +153,24 @@ def _send_transport_notification(booking):
 
 
 def home(request):
-    # Show every published package on the homepage.  Previously only the
-    # first three (with popular packages first) were rendered, which hid newly
-    # created packages from visitors.
-    packages = TourPackage.objects.select_related('destination').order_by(
-        '-is_popular', '-created_at'
+    # Keep the homepage focused on the three signature Zanzibar experiences.
+    # The complete catalogue remains available from the packages page.
+    popular_package_slugs = (
+        'spice-farm-prison-island-full-day-tour',
+        'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour',
+        'nakupenda-prison-island-stone-town-full-day-tour',
     )
+    packages_by_slug = {
+        package.slug: package
+        for package in TourPackage.objects.select_related('destination').filter(
+            slug__in=popular_package_slugs
+        )
+    }
+    packages = [
+        packages_by_slug[slug]
+        for slug in popular_package_slugs
+        if slug in packages_by_slug
+    ]
     stats = [
         {'label': 'Happy Travelers', 'value': '24K+'},
         {'label': 'Destinations', 'value': '48+'},

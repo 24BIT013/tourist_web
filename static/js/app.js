@@ -61,6 +61,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('[data-language-select]')?.addEventListener('change', (event) => applyLanguage(event.target.value));
     applyLanguage(localStorage.getItem('zanji-language') || 'en');
 
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNavigation = document.querySelector('.main-nav');
+    if (menuToggle && mainNavigation) {
+        const setMenuOpen = (isOpen) => {
+            mainNavigation.classList.toggle('is-open', isOpen);
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        menuToggle.addEventListener('click', () => {
+            setMenuOpen(!mainNavigation.classList.contains('is-open'));
+        });
+
+        mainNavigation.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => setMenuOpen(false));
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setMenuOpen(false);
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) setMenuOpen(false);
+        });
+    }
+
     document.querySelectorAll('.booking-form').forEach((form) => {
         const packageSelect = form.querySelector('[data-price-selector]');
         const travelersInput = form.querySelector('#id_travelers');
