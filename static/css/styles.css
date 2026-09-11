@@ -124,6 +124,14 @@ body {
     color: #1d5b53;
 }
 
+/* The two calls to action on the homepage have equal visual importance. */
+.hero .btn-secondary {
+    background: linear-gradient(135deg, #f7b267, #ed8f4c);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 12px 36px rgba(237, 143, 76, 0.22);
+}
+
 .btn-ghost {
     background: white;
     border: 1px solid #d6e4e2;
@@ -888,12 +896,29 @@ body {
 .booking-form input,
 .booking-form select,
 .booking-form textarea {
+    width: 100%;
     border: 1px solid #ccdcd3;
     border-radius: 14px;
     background: #fafffd;
     min-height: 44px;
     padding: 11px 14px;
     outline: none;
+    color: #24313c;
+    font: inherit;
+}
+
+.booking-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.booking-form input:focus,
+.booking-form select:focus,
+.booking-form textarea:focus,
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #6eb8a8;
+    box-shadow: 0 0 0 3px rgba(110, 184, 168, 0.22);
 }
 
 .booking-form button {
@@ -1056,7 +1081,8 @@ body {
     border-radius: 12px;
     background: rgba(255,255,255,0.08);
     color: white;
-    padding: 10px 12px;
+    min-height: 46px;
+    padding: 11px 14px;
     font: inherit;
 }
 
@@ -1180,6 +1206,13 @@ body {
     margin: 0 auto;
 }
 
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 38px;
+}
+
 .gallery-viewport {
     overflow: hidden;
     border-radius: 22px;
@@ -1191,7 +1224,6 @@ body {
 }
 
 .gallery-card {
-    flex: 0 0 100%;
     background: white;
     border: 1px solid #ddece8;
     border-radius: 22px;
@@ -1202,7 +1234,7 @@ body {
 .gallery-card img {
     display: block;
     width: 100%;
-    height: min(58vw, 510px);
+    height: 250px;
     object-fit: cover;
 }
 
@@ -1791,9 +1823,52 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .whatsapp-widget {
         right: 14px;
         bottom: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-grid,
+    .form-grid-dashboard {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .form-field-wide,
+    .form-wide {
+        grid-column: auto;
+    }
+
+    .transport-form-card,
+    .booking-panel {
+        padding: 24px 18px;
+        border-radius: 20px;
+    }
+
+    .booking-form-footer .btn,
+    .contact-form .btn,
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .form-actions {
+        align-items: stretch;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-top: 28px;
+    }
+
+    .gallery-card img {
+        height: min(72vw, 320px);
     }
 }
 
