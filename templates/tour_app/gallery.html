@@ -15,7 +15,10 @@
             {% for photo in gallery_images %}
                 <figure class="gallery-card">
                     <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zenji Adventures gallery image' }}">
-                    <figcaption>
+                    <button class="gallery-description-toggle" type="button" aria-expanded="false" aria-controls="gallery-description-{{ forloop.counter }}" data-gallery-description-toggle>
+                        View description
+                    </button>
+                    <figcaption id="gallery-description-{{ forloop.counter }}" hidden>
                         <h2>{{ photo.title|default:'Zanzibar experience' }}</h2>
                         <p>{{ photo.caption|default:'A memorable moment from a Zenji Adventures journey in Zanzibar.' }}</p>
                     </figcaption>

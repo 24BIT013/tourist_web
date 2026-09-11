@@ -150,4 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    document.querySelectorAll('[data-gallery-description-toggle]').forEach((button) => {
+        const description = document.getElementById(button.getAttribute('aria-controls'));
+        if (!description) return;
+
+        button.addEventListener('click', () => {
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', String(!isExpanded));
+            button.textContent = isExpanded ? 'View description' : 'Hide description';
+            description.hidden = isExpanded;
+        });
+    });
+
 });

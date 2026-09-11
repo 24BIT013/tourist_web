@@ -1238,8 +1238,28 @@ body {
     object-fit: cover;
 }
 
+.gallery-description-toggle {
+    width: 100%;
+    padding: 12px 18px;
+    border: 0;
+    border-top: 1px solid #ddece8;
+    background: #f4fbf8;
+    color: #17423b;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.gallery-description-toggle:hover,
+.gallery-description-toggle:focus-visible {
+    background: #e1f2ec;
+    outline: none;
+}
+
 .gallery-card figcaption {
     padding: 18px 20px;
+    border-top: 1px solid #ddece8;
 }
 
 .gallery-card h2 {
