@@ -110,11 +110,7 @@
             </div>
         </div>
         <div class="container footer-bottom">
-            {% if user.is_staff %}
-                <a href="{% url 'site_admin:dashboard' %}">Dashboard</a>
-            {% else %}
-                <a href="{% url 'site_admin:login' %}">Admin login</a>
-            {% endif %}
+            <span>Copyright 2026 Zenji Adventures. All rights reserved.</span>
         </div>
     </footer>
 
