@@ -117,10 +117,9 @@ class GalleryImageForm(forms.ModelForm):
 
     class Meta:
         model = GalleryImage
-        fields = ['title', 'image_url', 'caption']
+        fields = ['title', 'image_url']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'e.g. Sunset sailing'}),
-            'caption': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Describe this Zanzibar moment'}),
         }
 
     def clean_image_url(self):

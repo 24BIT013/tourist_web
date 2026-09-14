@@ -9,14 +9,13 @@
         <article class="dashboard-panel form-panel">
             <span class="eyebrow">{% if is_edit %}Edit gallery photo{% else %}Add gallery photo{% endif %}</span>
             <h1>{% if is_edit %}Update {{ gallery_image.title|default:'gallery photo' }}{% else %}Add a new gallery photo{% endif %}</h1>
-            <p>Add the photo link, a clear title, and a short description for visitors.</p>
+            <p>Add a local image path and a clear title for visitors.</p>
             <form class="dashboard-form" method="post">
                 {% csrf_token %}
                 {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
                 <div class="form-grid form-grid-dashboard">
                     <label class="form-field"><span>Title</span>{{ form.title }}{% for error in form.title.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
-                    <label class="form-field form-wide"><span>Image URL</span>{{ form.image_url }}{% for error in form.image_url.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
-                    <label class="form-field form-wide"><span>Description</span>{{ form.caption }}{% for error in form.caption.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+                    <label class="form-field form-wide"><span>Image path</span>{{ form.image_url }}{% for error in form.image_url.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
                 </div>
                 <div class="form-actions"><button class="btn btn-primary" type="submit">Save photo</button><a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a></div>
             </form>
