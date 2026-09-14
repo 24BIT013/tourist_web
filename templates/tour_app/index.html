@@ -15,11 +15,6 @@
             <div class="hero-actions">
                 <a href="{% url 'packages' %}" class="btn btn-primary" data-i18n="home.explore">Explore tours</a>
                 <a href="{% url 'home' %}#experiences" class="btn btn-secondary" data-i18n="home.how">How it works</a>
-                {% if user.is_staff %}
-                    <a href="{% url 'site_admin:dashboard' %}" class="btn btn-secondary">Dashboard</a>
-                {% else %}
-                    <a href="{% url 'site_admin:login' %}" class="btn btn-secondary">Admin login</a>
-                {% endif %}
             </div>
         </div>
 
