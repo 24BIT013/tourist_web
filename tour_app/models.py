@@ -25,7 +25,7 @@ class Destination(models.Model):
     name = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image_url = models.URLField(blank=True)
+    image_url = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return self.name
@@ -86,7 +86,7 @@ class TourPackage(models.Model):
 class GalleryImage(models.Model):
     """A photograph displayed on the public gallery page."""
     title = models.CharField(max_length=150, blank=True)
-    image_url = models.CharField(max_length=500, help_text='Use a public link or a local path beginning with images/.')
+    image_url = models.CharField(max_length=500, help_text='Use a local image path beginning with images/.')
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -148,6 +148,11 @@ class Booking(models.Model):
 
 
 class TransportBooking(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        CONFIRMED = 'confirmed', 'Confirmed'
+        CANCELLED = 'cancelled', 'Cancelled'
+
     class VehicleType(models.TextChoices):
         CAR = 'car', 'Private car'
         VAN = 'van', 'Private van'
@@ -163,6 +168,7 @@ class TransportBooking(models.Model):
     passengers = models.PositiveIntegerField(default=1)
     vehicle_type = models.CharField(max_length=20, choices=VehicleType.choices, default=VehicleType.CAR)
     special_requests = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

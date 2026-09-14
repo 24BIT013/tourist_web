@@ -4,6 +4,16 @@ from django.utils.text import slugify
 from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking, calculate_package_total
 
 
+def _clean_local_image_path(value, required=False):
+    value = value.strip()
+    if not value and not required:
+        return value
+    allowed_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif')
+    if value.startswith('images/') and value.lower().endswith(allowed_extensions):
+        return value
+    raise forms.ValidationError('Use a local image path beginning with images/ (for example images/gallery/photo.jpg).')
+
+
 def _unique_slug(model, value, instance=None):
     base_slug = slugify(value) or 'item'
     slug = base_slug
@@ -20,8 +30,8 @@ def _unique_slug(model, value, instance=None):
 class PackageForm(forms.ModelForm):
     image = forms.CharField(
         required=False,
-        label='Image URL',
-        widget=forms.TextInput(attrs={'placeholder': 'https://example.com/image.jpg or images/tours/photo.jpg'}),
+        label='Image path',
+        widget=forms.TextInput(attrs={'placeholder': 'images/tours/photo.jpg'}),
     )
 
     class Meta:
@@ -65,10 +75,7 @@ class PackageForm(forms.ModelForm):
         return cleaned_data
 
     def clean_image(self):
-        image = self.cleaned_data['image'].strip()
-        if not image or image.startswith(('https://', 'http://', 'images/')):
-            return image
-        raise forms.ValidationError('Use a public http(s) image URL or a path beginning with images/.')
+        return _clean_local_image_path(self.cleaned_data['image'])
 
     def save(self, commit=True):
         package = super().save(commit=False)
@@ -82,6 +89,11 @@ class PackageForm(forms.ModelForm):
 
 
 class DestinationForm(forms.ModelForm):
+    image_url = forms.CharField(
+        required=False,
+        label='Image path',
+        widget=forms.TextInput(attrs={'placeholder': 'images/destinations/zanzibar.jpg'}),
+    )
     class Meta:
         model = Destination
         fields = ['name', 'country', 'description', 'image_url']
@@ -89,18 +101,18 @@ class DestinationForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'placeholder': 'Zanzibar'}),
             'country': forms.TextInput(attrs={'placeholder': 'Tanzania'}),
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'What makes this destination special?'}),
-            'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/destination.jpg'}),
         }
+
+    def clean_image_url(self):
+        return _clean_local_image_path(self.cleaned_data['image_url'])
 
 
 class GalleryImageForm(forms.ModelForm):
     """Create and update the photos displayed on the public gallery."""
 
-    # A gallery record may use either a hosted image or an image included in
-    # the site's static/images directory.
     image_url = forms.CharField(
-        label='Image URL',
-        widget=forms.TextInput(attrs={'placeholder': 'https://example.com/photo.jpg or images/gallery/photo.jpg'}),
+        label='Image path',
+        widget=forms.TextInput(attrs={'placeholder': 'images/gallery/photo.jpg'}),
     )
 
     class Meta:
@@ -112,10 +124,7 @@ class GalleryImageForm(forms.ModelForm):
         }
 
     def clean_image_url(self):
-        image_url = self.cleaned_data['image_url'].strip()
-        if image_url.startswith(('https://', 'http://', 'images/')):
-            return image_url
-        raise forms.ValidationError('Use a public http(s) image URL or a path beginning with images/.')
+        return _clean_local_image_path(self.cleaned_data['image_url'], required=True)
 
 
 class BookingForm(forms.ModelForm):

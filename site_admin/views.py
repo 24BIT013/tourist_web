@@ -21,7 +21,7 @@ SECTIONS = {
     'gallery': {'label': 'Gallery photos', 'singular': 'gallery photo', 'model': GalleryImage, 'form': GalleryImageForm},
     'destinations': {'label': 'Destinations', 'singular': 'destination', 'model': Destination, 'form': DestinationForm},
     'bookings': {'label': 'Tour bookings', 'singular': 'tour booking', 'model': Booking, 'form': BookingAdminForm},
-    'transport': {'label': 'Transport requests', 'singular': 'transport request', 'model': TransportBooking, 'form': TransportBookingAdminForm},
+    'transport': {'label': 'Transport bookings', 'singular': 'transport booking', 'model': TransportBooking, 'form': TransportBookingAdminForm},
     'messages': {'label': 'Contact messages', 'singular': 'contact message', 'model': Complaint, 'form': ComplaintAdminForm},
 }
 

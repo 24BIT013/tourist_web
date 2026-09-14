@@ -24,11 +24,6 @@
                 <a class="{% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}" data-i18n="nav.gallery">Gallery</a>
                 <a class="{% if request.resolver_match.url_name == 'transport' %}active{% endif %}" href="{% url 'transport' %}">Transport</a>
                 <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}" data-i18n="nav.contact">Contact</a>
-                {% if user.is_staff %}
-                    <a href="{% url 'site_admin:dashboard' %}">Dashboard</a>
-                {% else %}
-                    <a href="{% url 'site_admin:login' %}">Admin login</a>
-                {% endif %}
             </nav>
             <div class="nav-actions">
                 <label class="language-switcher" for="language-select">
@@ -112,11 +107,6 @@
                 <h4>Support</h4>
                 <a href="{% url 'packages' %}#booking">Booking</a>
                 <a href="{% url 'contact' %}">Contact us</a>
-                {% if user.is_staff %}
-                    <a href="{% url 'site_admin:dashboard' %}">Dashboard</a>
-                {% else %}
-                    <a href="{% url 'site_admin:login' %}">Admin login</a>
-                {% endif %}
             </div>
         </div>
         <div class="container footer-bottom">
