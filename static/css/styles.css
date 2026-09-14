@@ -1010,6 +1010,12 @@ body {
     color: #c6dddb;
 }
 
+.footer-copyright-login {
+    color: inherit;
+    text-decoration: none;
+    cursor: default;
+}
+
 .contact-section {
     margin-top: 42px;
     padding: 34px 0 38px;
