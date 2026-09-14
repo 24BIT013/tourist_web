@@ -25,9 +25,9 @@
                 <a class="{% if request.resolver_match.url_name == 'transport' %}active{% endif %}" href="{% url 'transport' %}">Transport</a>
                 <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}" data-i18n="nav.contact">Contact</a>
                 {% if user.is_staff %}
-                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'site_admin:dashboard' %}">Dashboard</a>
                 {% else %}
-                    <a href="{% url 'admin:login' %}?next={% url 'dashboard' %}">Admin login</a>
+                    <a href="{% url 'site_admin:login' %}">Admin login</a>
                 {% endif %}
             </nav>
             <div class="nav-actions">
@@ -113,9 +113,9 @@
                 <a href="{% url 'packages' %}#booking">Booking</a>
                 <a href="{% url 'contact' %}">Contact us</a>
                 {% if user.is_staff %}
-                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'site_admin:dashboard' %}">Dashboard</a>
                 {% else %}
-                    <a href="{% url 'admin:login' %}?next={% url 'dashboard' %}">Admin login</a>
+                    <a href="{% url 'site_admin:login' %}">Admin login</a>
                 {% endif %}
             </div>
         </div>

@@ -1,0 +1,15 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}{{ config.label }} | Website Management{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section"><div class="container dashboard-form-grid"><article class="dashboard-panel form-panel">
+    <span class="eyebrow">Website management</span><h1>{% if record %}Edit {{ config.singular }}{% else %}Add {{ config.singular }}{% endif %}</h1>
+    <form method="post" class="dashboard-form">{% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="form-grid form-grid-dashboard">{% for field in form %}<label class="form-field {% if field.field.widget.input_type == 'checkbox' or field.name == 'description' or field.name == 'summary' or field.name == 'caption' or field.name == 'special_requests' or field.name == 'message' %}form-wide{% endif %}"><span>{{ field.label }}</span>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>{% endfor %}</div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Save {{ config.singular }}</button><a class="btn btn-secondary" href="{% url 'site_admin:dashboard' %}">Cancel</a></div>
+    </form>
+</article></div></section>
+{% endblock %}

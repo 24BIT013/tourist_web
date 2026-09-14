@@ -264,7 +264,7 @@ def package_detail(request, slug):
     return render(request, 'tour_app/package_detail.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def dashboard(request):
     packages = TourPackage.objects.select_related('destination').annotate(
         booking_count=Count('bookings')
@@ -288,34 +288,34 @@ def dashboard(request):
     return render(request, 'tour_app/dashboard.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def package_create(request):
     return _package_form(request)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def package_edit(request, pk):
     package = get_object_or_404(TourPackage, pk=pk)
     return _package_form(request, package=package)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def destination_create(request):
     return _destination_form(request)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def destination_edit(request, pk):
     destination = get_object_or_404(Destination, pk=pk)
     return _destination_form(request, destination=destination)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def gallery_image_create(request):
     return _gallery_image_form(request)
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def gallery_image_edit(request, pk):
     gallery_image = get_object_or_404(GalleryImage, pk=pk)
     return _gallery_image_form(request, gallery_image=gallery_image)
@@ -370,7 +370,7 @@ def _gallery_image_form(request, gallery_image=None):
     })
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def package_delete(request, pk):
     package = get_object_or_404(TourPackage, pk=pk)
 
@@ -383,7 +383,7 @@ def package_delete(request, pk):
     return render(request, 'tour_app/package_confirm_delete.html', {'package': package})
 
 
-@staff_member_required
+@staff_member_required(login_url='site_admin:login')
 def gallery_image_delete(request, pk):
     gallery_image = get_object_or_404(GalleryImage, pk=pk)
 

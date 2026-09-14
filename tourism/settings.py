@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tour_app',
+    'site_admin',
 ]
 
 MIDDLEWARE = [
