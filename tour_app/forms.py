@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.text import slugify
 
-from .models import Booking, Complaint, Destination, TourPackage, TransportBooking, calculate_package_total
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking, calculate_package_total
 
 
 def _unique_slug(model, value, instance=None):
@@ -18,6 +18,12 @@ def _unique_slug(model, value, instance=None):
 
 
 class PackageForm(forms.ModelForm):
+    image = forms.CharField(
+        required=False,
+        label='Image URL',
+        widget=forms.TextInput(attrs={'placeholder': 'https://example.com/image.jpg or images/tours/photo.jpg'}),
+    )
+
     class Meta:
         model = TourPackage
         fields = [
@@ -41,7 +47,6 @@ class PackageForm(forms.ModelForm):
             'price': forms.TextInput(attrs={'placeholder': '$1,250'}),
             'summary': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Short package summary'}),
             'description': forms.Textarea(attrs={'rows': 8, 'placeholder': 'Full package description'}),
-            'image': forms.URLInput(attrs={'placeholder': 'https://example.com/image.jpg'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -58,6 +63,12 @@ class PackageForm(forms.ModelForm):
         if destination and not country:
             cleaned_data['country'] = destination.country
         return cleaned_data
+
+    def clean_image(self):
+        image = self.cleaned_data['image'].strip()
+        if not image or image.startswith(('https://', 'http://', 'images/')):
+            return image
+        raise forms.ValidationError('Use a public http(s) image URL or a path beginning with images/.')
 
     def save(self, commit=True):
         package = super().save(commit=False)
@@ -80,6 +91,31 @@ class DestinationForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'What makes this destination special?'}),
             'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/destination.jpg'}),
         }
+
+
+class GalleryImageForm(forms.ModelForm):
+    """Create and update the photos displayed on the public gallery."""
+
+    # A gallery record may use either a hosted image or an image included in
+    # the site's static/images directory.
+    image_url = forms.CharField(
+        label='Image URL',
+        widget=forms.TextInput(attrs={'placeholder': 'https://example.com/photo.jpg or images/gallery/photo.jpg'}),
+    )
+
+    class Meta:
+        model = GalleryImage
+        fields = ['title', 'image_url', 'caption']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'e.g. Sunset sailing'}),
+            'caption': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Describe this Zanzibar moment'}),
+        }
+
+    def clean_image_url(self):
+        image_url = self.cleaned_data['image_url'].strip()
+        if image_url.startswith(('https://', 'http://', 'images/')):
+            return image_url
+        raise forms.ValidationError('Use a public http(s) image URL or a path beginning with images/.')
 
 
 class BookingForm(forms.ModelForm):

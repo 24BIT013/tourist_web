@@ -9,7 +9,10 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import BookingForm, ComplaintForm, DestinationForm, PackageForm, TransportBookingForm
+from .forms import (
+    BookingForm, ComplaintForm, DestinationForm, GalleryImageForm,
+    PackageForm, TransportBookingForm,
+)
 from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking
 
 
@@ -272,6 +275,7 @@ def dashboard(request):
     context = {
         'packages': packages,
         'destinations': Destination.objects.annotate(package_count=Count('packages')).order_by('name'),
+        'gallery_images': GalleryImage.objects.all(),
         'bookings': bookings,
         'transport_bookings': transport_bookings,
         'stats': {
@@ -304,6 +308,17 @@ def destination_create(request):
 def destination_edit(request, pk):
     destination = get_object_or_404(Destination, pk=pk)
     return _destination_form(request, destination=destination)
+
+
+@staff_member_required
+def gallery_image_create(request):
+    return _gallery_image_form(request)
+
+
+@staff_member_required
+def gallery_image_edit(request, pk):
+    gallery_image = get_object_or_404(GalleryImage, pk=pk)
+    return _gallery_image_form(request, gallery_image=gallery_image)
 
 
 def _package_form(request, package=None):
@@ -339,6 +354,22 @@ def _destination_form(request, destination=None):
     })
 
 
+def _gallery_image_form(request, gallery_image=None):
+    form = GalleryImageForm(request.POST or None, instance=gallery_image)
+
+    if request.method == 'POST' and form.is_valid():
+        saved_image = form.save()
+        action = 'updated' if gallery_image else 'added'
+        messages.success(request, f'Gallery image "{saved_image.title or "Untitled"}" has been {action}.')
+        return redirect('dashboard')
+
+    return render(request, 'tour_app/gallery_image_form.html', {
+        'form': form,
+        'gallery_image': gallery_image,
+        'is_edit': gallery_image is not None,
+    })
+
+
 @staff_member_required
 def package_delete(request, pk):
     package = get_object_or_404(TourPackage, pk=pk)
@@ -350,3 +381,18 @@ def package_delete(request, pk):
         return redirect('dashboard')
 
     return render(request, 'tour_app/package_confirm_delete.html', {'package': package})
+
+
+@staff_member_required
+def gallery_image_delete(request, pk):
+    gallery_image = get_object_or_404(GalleryImage, pk=pk)
+
+    if request.method == 'POST':
+        title = gallery_image.title or 'Untitled image'
+        gallery_image.delete()
+        messages.success(request, f'Gallery image "{title}" has been deleted.')
+        return redirect('dashboard')
+
+    return render(request, 'tour_app/gallery_image_confirm_delete.html', {
+        'gallery_image': gallery_image,
+    })

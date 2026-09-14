@@ -1,0 +1,31 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Zenji Adventures | {% if is_edit %}Edit Gallery Photo{% else %}Add Gallery Photo{% endif %}{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section">
+    <div class="container dashboard-form-grid">
+        <article class="dashboard-panel form-panel">
+            <span class="eyebrow">{% if is_edit %}Edit gallery photo{% else %}Add gallery photo{% endif %}</span>
+            <h1>{% if is_edit %}Update {{ gallery_image.title|default:'gallery photo' }}{% else %}Add a new gallery photo{% endif %}</h1>
+            <p>Add the photo link, a clear title, and a short description for visitors.</p>
+            <form class="dashboard-form" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+                <div class="form-grid form-grid-dashboard">
+                    <label class="form-field"><span>Title</span>{{ form.title }}{% for error in form.title.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+                    <label class="form-field form-wide"><span>Image URL</span>{{ form.image_url }}{% for error in form.image_url.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+                    <label class="form-field form-wide"><span>Description</span>{{ form.caption }}{% for error in form.caption.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>
+                </div>
+                <div class="form-actions"><button class="btn btn-primary" type="submit">Save photo</button><a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a></div>
+            </form>
+        </article>
+        <aside class="dashboard-panel form-help">
+            <span class="eyebrow">Photo tips</span>
+            <h2>Make the gallery shine</h2>
+            <ul class="help-list"><li>Use a public image URL or a local static path such as <code>images/gallery/photo.jpg</code>.</li><li>Choose a title that explains the moment.</li><li>Keep descriptions short and welcoming.</li></ul>
+        </aside>
+    </div>
+</section>
+{% endblock %}

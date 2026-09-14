@@ -40,7 +40,8 @@ class TourPackage(models.Model):
     price = models.CharField(max_length=50)
     summary = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    image = models.URLField(blank=True)
+    # Allows either a hosted URL or a local path such as images/tours/photo.jpg.
+    image = models.CharField(max_length=500, blank=True)
     is_popular = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -85,7 +86,7 @@ class TourPackage(models.Model):
 class GalleryImage(models.Model):
     """A photograph displayed on the public gallery page."""
     title = models.CharField(max_length=150, blank=True)
-    image_url = models.URLField(help_text='Paste the public link to the photograph.')
+    image_url = models.CharField(max_length=500, help_text='Use a public link or a local path beginning with images/.')
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

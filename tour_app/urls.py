@@ -18,4 +18,7 @@ urlpatterns = [
     path('dashboard/packages/<int:pk>/delete/', views.package_delete, name='package_delete'),
     path('dashboard/destinations/add/', views.destination_create, name='destination_create'),
     path('dashboard/destinations/<int:pk>/edit/', views.destination_edit, name='destination_edit'),
+    path('dashboard/gallery/add/', views.gallery_image_create, name='gallery_image_create'),
+    path('dashboard/gallery/<int:pk>/edit/', views.gallery_image_edit, name='gallery_image_edit'),
+    path('dashboard/gallery/<int:pk>/delete/', views.gallery_image_delete, name='gallery_image_delete'),
 ]

@@ -753,7 +753,7 @@ body {
 .transport-section {
     background:
         linear-gradient(rgba(16, 93, 68, 0.72), rgba(16, 93, 68, 0.72)),
-        url("../images/qd.png") center / cover no-repeat;
+        url("../images/alp.png") center / cover no-repeat;
 }
 
 .transport-copy h2,
@@ -1538,6 +1538,15 @@ body {
 
 .dashboard-table td {
     color: #23323d;
+}
+
+.dashboard-thumbnail {
+    display: block;
+    width: 74px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 9px;
+    background: #eaf1ef;
 }
 
 .table-actions {

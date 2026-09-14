@@ -1,0 +1,19 @@
+{% extends 'tour_app/base.html' %}
+
+{% block title %}Zenji Adventures | Delete Gallery Photo{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="section dashboard-form-section">
+    <div class="container delete-panel">
+        <span class="eyebrow">Delete gallery photo</span>
+        <h1>Delete "{{ gallery_image.title|default:'this photo' }}"?</h1>
+        <p>This removes the photo from the public gallery. The original image file or external image link is not deleted.</p>
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">Delete photo</button>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

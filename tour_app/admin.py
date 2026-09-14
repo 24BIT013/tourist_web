@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Booking, Complaint, Destination, GalleryImage, TourPackage
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking
 
 admin.site.site_header = 'Zenji Adventures Administration'
 admin.site.site_title = 'Zenji Adventures Admin'
@@ -79,5 +79,14 @@ class BookingAdmin(admin.ModelAdmin):
 class ComplaintAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone', 'created_at')
     search_fields = ('name', 'email', 'phone', 'message')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
+
+
+@admin.register(TransportBooking)
+class TransportBookingAdmin(admin.ModelAdmin):
+    list_display = ('guest_name', 'guest_email', 'guest_phone', 'pickup_location', 'dropoff_location', 'pickup_date', 'pickup_time', 'vehicle_type', 'created_at')
+    list_filter = ('vehicle_type', 'pickup_date')
+    search_fields = ('guest_name', 'guest_email', 'guest_phone', 'pickup_location', 'dropoff_location')
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'

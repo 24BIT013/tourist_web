@@ -15,6 +15,7 @@
         </div>
         <div class="dashboard-actions">
             <a class="btn btn-primary" href="{% url 'package_create' %}">Add package</a>
+            <a class="btn btn-secondary" href="{% url 'gallery_image_create' %}">Add gallery photo</a>
             <a class="btn btn-secondary" href="{% url 'destination_create' %}">Add destination</a>
             <a class="btn btn-secondary" href="{% url 'packages' %}">View public site</a>
         </div>
@@ -91,6 +92,33 @@
                             <tr>
                                 <td colspan="6" class="table-empty">No packages have been created yet.</td>
                             </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="dashboard-panel">
+            <div class="section-head split">
+                <div>
+                    <span class="eyebrow">Gallery</span>
+                    <h2>Photo library</h2>
+                </div>
+                <a class="btn btn-ghost" href="{% url 'gallery_image_create' %}">Add photo</a>
+            </div>
+            <div class="table-wrap">
+                <table class="dashboard-table">
+                    <thead><tr><th>Photo</th><th>Title and description</th><th>Added</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        {% for photo in gallery_images %}
+                            <tr>
+                                <td><img class="dashboard-thumbnail" src="{{ photo.display_url }}" alt="{{ photo.title|default:'Gallery image' }}"></td>
+                                <td><strong>{{ photo.title|default:'Untitled image' }}</strong><div class="muted">{{ photo.caption|default:'No description yet.'|truncatewords:12 }}</div></td>
+                                <td>{{ photo.created_at|date:"M j, Y" }}</td>
+                                <td class="table-actions"><a href="{% url 'gallery_image_edit' photo.pk %}">Edit</a><a href="{% url 'gallery_image_delete' photo.pk %}">Delete</a></td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="4" class="table-empty">No gallery photos have been added yet.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
