@@ -14,6 +14,10 @@ services:
       # from source control and is used only to create the initial account.
       - key: ADMIN_PASSWORD
         sync: false
+      # Set to True once when a pre-existing administrator needs its password
+      # reset, then remove it or set it to False after the next deploy.
+      - key: ADMIN_RESET_PASSWORD
+        sync: false
       # Prevent a service created without the database link from falling back
       # to Render's temporary filesystem.
       - key: REQUIRE_DATABASE_URL

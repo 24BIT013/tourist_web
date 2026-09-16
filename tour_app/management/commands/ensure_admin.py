@@ -17,6 +17,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         username = os.environ.get('ADMIN_USERNAME', '').strip()
         password = os.environ.get('ADMIN_PASSWORD', '')
+        reset_password = (
+            options['reset_password']
+            or os.environ.get('ADMIN_RESET_PASSWORD', '').lower() == 'true'
+        )
 
         if not username and not password:
             self.stdout.write('Administrator creation skipped: credentials are not configured.')
@@ -28,7 +32,7 @@ class Command(BaseCommand):
         user, created = User.objects.get_or_create(username=username)
 
         changed = False
-        if created or options['reset_password']:
+        if created or reset_password:
             user.set_password(password)
             changed = True
         if not user.is_staff:
@@ -42,5 +46,7 @@ class Command(BaseCommand):
 
         if created:
             self.stdout.write(self.style.SUCCESS(f'Administrator "{username}" created.'))
+        elif reset_password:
+            self.stdout.write(self.style.SUCCESS(f'Administrator "{username}" password reset.'))
         else:
             self.stdout.write(f'Administrator "{username}" already exists.')
