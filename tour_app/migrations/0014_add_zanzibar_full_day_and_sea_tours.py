@@ -43,7 +43,7 @@ def add_zanzibar_full_day_and_sea_tours(apps, schema_editor):
         },
         {
             'title': 'Sunset Dhow, Unguja Ukuu Snorkeling & Kayaking',
-            'slug': 'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour',
+            'slug': 'sunset-dhow-unguja-ukuu-snorkeling-kayaking-tour',
             'duration': 'Full Day',
             'price': '$180',
             'summary': 'A sea-loving full day of snorkeling, clear kayaking, and a sunset dhow cruise.',

@@ -33,7 +33,7 @@ class Destination(models.Model):
 
 class TourPackage(models.Model):
     title = models.CharField(max_length=150)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='packages', null=True, blank=True)
     country = models.CharField(max_length=100)
     duration = models.CharField(max_length=50)
@@ -69,7 +69,7 @@ class TourPackage(models.Model):
                 'images/tours/kobe.png',
                 'images/tours/hamn.png',
             ),
-            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour': (
+            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-tour': (
                 'images/tours/sn.jpg',
                 'images/tours/sun.png',
                 'images/tours/zanzibar-clear-kayak.png',

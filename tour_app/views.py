@@ -160,7 +160,7 @@ def home(request):
     # The complete catalogue remains available from the packages page.
     popular_package_slugs = (
         'spice-farm-prison-island-full-day-tour',
-        'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour',
+        'sunset-dhow-unguja-ukuu-snorkeling-kayaking-tour',
         'nakupenda-prison-island-stone-town-full-day-tour',
     )
     packages_by_slug = {

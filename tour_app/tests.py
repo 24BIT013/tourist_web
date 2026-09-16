@@ -126,7 +126,7 @@ class PublicPackagesTests(TestCase):
     def test_homepage_shows_only_the_selected_popular_packages(self):
         homepage_slugs = (
             'spice-farm-prison-island-full-day-tour',
-            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-full-day-tour',
+            'sunset-dhow-unguja-ukuu-snorkeling-kayaking-tour',
             'nakupenda-prison-island-stone-town-full-day-tour',
         )
         for number, slug in enumerate(homepage_slugs):
