@@ -8,6 +8,12 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
+      - key: ADMIN_USERNAME
+        value: "burminho"
+      # Set this secret in the Render dashboard. It is deliberately excluded
+      # from source control and is used only to create the initial account.
+      - key: ADMIN_PASSWORD
+        sync: false
       # Prevent a service created without the database link from falling back
       # to Render's temporary filesystem.
       - key: REQUIRE_DATABASE_URL
@@ -21,7 +27,7 @@ services:
     # Apply the Booking migrations before serving requests.  Without this,
     # a newly deployed database can be missing the booking columns and a
     # booking submission fails with HTTP 500.
-    startCommand: python manage.py migrate --noinput && gunicorn tourism.wsgi:application
+    startCommand: python manage.py migrate --noinput && python manage.py ensure_admin && gunicorn tourism.wsgi:application
 
 databases:
   - name: tourist-web-db
