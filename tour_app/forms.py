@@ -1,17 +1,27 @@
 from django import forms
 from django.utils.text import slugify
+from urllib.parse import urlparse
 
 from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking, calculate_package_total
 
 
-def _clean_local_image_path(value, required=False):
+def _clean_image_reference(value, required=False):
+    """Allow bundled images and durable, externally hosted image URLs."""
     value = value.strip()
     if not value and not required:
         return value
     allowed_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif')
     if value.startswith('images/') and value.lower().endswith(allowed_extensions):
         return value
-    raise forms.ValidationError('Use a local image path beginning with images/ (for example images/gallery/photo.jpg).')
+
+    parsed = urlparse(value)
+    if parsed.scheme == 'https' and parsed.netloc:
+        return value
+
+    raise forms.ValidationError(
+        'Use an image path beginning with images/ or a secure hosted image URL '
+        '(for example, Cloudinary or Amazon S3).'
+    )
 
 
 def _unique_slug(model, value, instance=None):
@@ -30,8 +40,8 @@ def _unique_slug(model, value, instance=None):
 class PackageForm(forms.ModelForm):
     image = forms.CharField(
         required=False,
-        label='Image path',
-        widget=forms.TextInput(attrs={'placeholder': 'images/tours/photo.jpg'}),
+        label='Image path or hosted URL',
+        widget=forms.TextInput(attrs={'placeholder': 'images/tours/photo.jpg or https://...'}),
     )
 
     class Meta:
@@ -75,7 +85,7 @@ class PackageForm(forms.ModelForm):
         return cleaned_data
 
     def clean_image(self):
-        return _clean_local_image_path(self.cleaned_data['image'])
+        return _clean_image_reference(self.cleaned_data['image'])
 
     def save(self, commit=True):
         package = super().save(commit=False)
@@ -91,8 +101,8 @@ class PackageForm(forms.ModelForm):
 class DestinationForm(forms.ModelForm):
     image_url = forms.CharField(
         required=False,
-        label='Image path',
-        widget=forms.TextInput(attrs={'placeholder': 'images/destinations/zanzibar.jpg'}),
+        label='Image path or hosted URL',
+        widget=forms.TextInput(attrs={'placeholder': 'images/destinations/zanzibar.jpg or https://...'}),
     )
     class Meta:
         model = Destination
@@ -104,15 +114,15 @@ class DestinationForm(forms.ModelForm):
         }
 
     def clean_image_url(self):
-        return _clean_local_image_path(self.cleaned_data['image_url'])
+        return _clean_image_reference(self.cleaned_data['image_url'])
 
 
 class GalleryImageForm(forms.ModelForm):
     """Create and update the photos displayed on the public gallery."""
 
     image_url = forms.CharField(
-        label='Image path',
-        widget=forms.TextInput(attrs={'placeholder': 'images/gallery/photo.jpg'}),
+        label='Image path or hosted URL',
+        widget=forms.TextInput(attrs={'placeholder': 'images/gallery/photo.jpg or https://...'}),
     )
 
     class Meta:
@@ -123,7 +133,7 @@ class GalleryImageForm(forms.ModelForm):
         }
 
     def clean_image_url(self):
-        return _clean_local_image_path(self.cleaned_data['image_url'], required=True)
+        return _clean_image_reference(self.cleaned_data['image_url'], required=True)
 
 
 class BookingForm(forms.ModelForm):

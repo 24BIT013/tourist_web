@@ -130,12 +130,14 @@ class PublicPackagesTests(TestCase):
             'nakupenda-prison-island-stone-town-full-day-tour',
         )
         for number, slug in enumerate(homepage_slugs):
-            TourPackage.objects.create(
-                title=f'Package {number}',
+            TourPackage.objects.update_or_create(
                 slug=slug,
-                country='Tanzania',
-                duration='3 days',
-                price='$500',
+                defaults={
+                    'title': f'Package {number}',
+                    'country': 'Tanzania',
+                    'duration': '3 days',
+                    'price': '$500',
+                },
             )
         TourPackage.objects.create(
             title='Other package',
