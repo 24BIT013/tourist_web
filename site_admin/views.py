@@ -65,7 +65,8 @@ def dashboard(request):
             'slug': slug,
             'label': config['label'],
             'count': queryset.count(),
-            'records': queryset[:6],
+            # The dashboard count must match the records an administrator can see.
+            'records': queryset,
         })
     return render(request, 'site_admin/dashboard.html', {
         'sections': sections,

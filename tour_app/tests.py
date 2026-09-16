@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.test import override_settings
 from django.urls import reverse
 
-from .models import Booking, Complaint, Destination, TourPackage
+from .models import Booking, Complaint, Destination, GalleryImage, TourPackage
 
 
 class BookingNotificationTests(TestCase):
@@ -218,3 +218,24 @@ class AdminSiteTests(TestCase):
         self.assertIn(Destination, admin.site._registry)
         self.assertIn(TourPackage, admin.site._registry)
         self.assertIn(Booking, admin.site._registry)
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class ManagementDashboardTests(TestCase):
+    def test_gallery_section_shows_every_gallery_record(self):
+        from django.contrib.auth import get_user_model
+
+        staff_user = get_user_model().objects.create_user(
+            'manager', password='password', is_staff=True,
+        )
+        GalleryImage.objects.bulk_create([
+            GalleryImage(title=f'Gallery photo {number}', image_url=f'images/gallery/{number}.jpg')
+            for number in range(7)
+        ])
+        self.client.force_login(staff_user)
+
+        response = self.client.get(reverse('site_admin:dashboard'))
+
+        self.assertContains(response, f'{GalleryImage.objects.count()} records')
+        for number in range(7):
+            self.assertContains(response, f'Gallery photo {number}')
