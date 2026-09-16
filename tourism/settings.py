@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Set SECRET_KEY in Vercel for production. The fallback is only for local use.
@@ -80,10 +82,23 @@ ASGI_APPLICATION = 'tourism.asgi.application'
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
+require_database_url = (
+    os.environ.get('RENDER')
+    or os.environ.get('REQUIRE_DATABASE_URL', '').lower() == 'true'
+)
+
+if not DATABASE_URL and require_database_url:
+    # Render's web-service filesystem is ephemeral.  Refuse to start there
+    # without the managed Postgres connection, rather than losing admin edits
+    # in a newly created SQLite database after a restart.
+    raise ImproperlyConfigured(
+        'DATABASE_URL must be set on Render. Link the Render PostgreSQL '
+        'database to this web service before deploying.'
+    )
+
 if DATABASE_URL:
     import dj_database_url
 
-    # Vercel's filesystem is not persistent, so production must use Postgres.
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -92,7 +107,7 @@ if DATABASE_URL:
         )
     }
 else:
-    # Keep SQLite for local development only.
+    # SQLite is intentionally limited to local development.
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

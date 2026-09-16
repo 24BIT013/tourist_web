@@ -8,6 +8,10 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
+      # Prevent a service created without the database link from falling back
+      # to Render's temporary filesystem.
+      - key: REQUIRE_DATABASE_URL
+        value: "True"
       # Packages, destinations, and bookings must be stored in Postgres.
       # The local SQLite file is only used when running the project locally.
       - key: DATABASE_URL
