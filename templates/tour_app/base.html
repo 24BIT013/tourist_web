@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Zenji Adventures{% endblock %}</title>
+    <title>{% block title %}Zenji Adventures &amp; Safari{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <header class="topbar">
         <div class="container nav-wrapper">
             <a href="{% url 'home' %}" class="brand">
-                <img class="brand-icon" src="{% static 'images/brand/profile.jpg' %}" alt="Zenji Adventures logo">
-                <span>Zenji Adventures</span>
+                <img class="brand-icon" src="{% static 'images/brand/pr.jpg' %}" alt="Zenji Adventures &amp; Safari logo">
+                <span>Zenji Adventures &amp; Safari</span>
             </a>
             <button class="menu-toggle" type="button" aria-controls="main-navigation" aria-expanded="false">
                 <span class="visually-hidden">Open navigation menu</span>
@@ -82,8 +82,8 @@
         <div class="container footer-grid">
             <div>
                 <a class="brand footer-brand" href="{% url 'home' %}">
-                    <img class="brand-icon" src="{% static 'images/brand/profile.jpg' %}" alt="Zenji Adventures logo">
-                    <span>Zenji Adventures</span>
+                    <img class="brand-icon" src="{% static 'images/brand/pr.jpg' %}" alt="Zenji Adventures &amp; Safari logo">
+                    <span>Zenji Adventures &amp; Safari</span>
                 </a>
                 <p class="footer-copy">Travel beautifully with journeys crafted around discovery, ease, and connection.</p>
             </div>
@@ -108,9 +108,18 @@
                 <a href="{% url 'packages' %}#booking">Booking</a>
                 <a href="{% url 'contact' %}">Contact us</a>
             </div>
+            <div>
+                <h4>Follow us</h4>
+                <div class="social-links" aria-label="Zenji Adventures and Safari social media">
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Follow Zenji Adventures and Safari on Instagram">Instagram</a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Follow Zenji Adventures and Safari on Facebook">Facebook</a>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="Follow Zenji Adventures and Safari on TikTok">TikTok</a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to Zenji Adventures and Safari on YouTube">YouTube</a>
+                </div>
+            </div>
         </div>
         <div class="container footer-bottom">
-            <a class="footer-copyright-login" href="{% url 'site_admin:login' %}">Copyright 2026 Zenji Adventures. All rights reserved.</a>
+            <a class="footer-copyright-login" href="{% url 'site_admin:login' %}">Copyright 2026 Zenji Adventures &amp; Safari. All rights reserved.</a>
         </div>
     </footer>
 

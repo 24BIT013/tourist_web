@@ -49,7 +49,7 @@ def _send_booking_notification(booking, package_label):
         headers={
             'Content-Type': 'application/x-www-form-urlencoded',
             'Referer': settings.BOOKING_SITE_URL,
-            'User-Agent': 'Zenji Adventures booking notifications',
+            'User-Agent': 'Zenji Adventures & Safari booking notifications',
         },
         method='POST',
     )
@@ -105,7 +105,7 @@ def _send_complaint_notification(complaint):
         headers={
             'Content-Type': 'application/x-www-form-urlencoded',
             'Referer': settings.BOOKING_SITE_URL,
-            'User-Agent': 'Zenji Adventures contact notifications',
+            'User-Agent': 'Zenji Adventures & Safari contact notifications',
         },
         method='POST',
     )
@@ -142,7 +142,7 @@ def _send_transport_notification(booking):
     request = Request(
         settings.BOOKING_NOTIFICATION_URL,
         data=urlencode(form_data).encode('utf-8'),
-        headers={'Content-Type': 'application/x-www-form-urlencoded', 'Referer': settings.BOOKING_SITE_URL, 'User-Agent': 'Zenji Adventures transport bookings'},
+        headers={'Content-Type': 'application/x-www-form-urlencoded', 'Referer': settings.BOOKING_SITE_URL, 'User-Agent': 'Zenji Adventures & Safari transport bookings'},
         method='POST',
     )
     try:

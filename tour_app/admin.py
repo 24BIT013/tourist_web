@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from .models import Booking, Complaint, Destination, GalleryImage, TourPackage, TransportBooking
 
-admin.site.site_header = 'Zenji Adventures Administration'
-admin.site.site_title = 'Zenji Adventures Admin'
+admin.site.site_header = 'Zenji Adventures & Safari Administration'
+admin.site.site_title = 'Zenji Adventures & Safari Admin'
 admin.site.index_title = 'Manage Zanzibar tours, gallery images, and customer bookings'
 
 

@@ -1,6 +1,6 @@
 {% extends 'tour_app/base.html' %}
 
-{% block title %}Zenji Adventures | Gallery{% endblock %}
+{% block title %}Zenji Adventures &amp; Safari | Gallery{% endblock %}
 
 {% block content %}
 <section class="section gallery-page">
@@ -11,10 +11,10 @@
             <p>Explore Zanzibar through our tour photographs, with a story behind every moment.</p>
         </div>
 
-        <div class="gallery-grid" aria-label="Zenji Adventures photo gallery">
+        <div class="gallery-grid" aria-label="Zenji Adventures and Safari photo gallery">
             {% for photo in gallery_images %}
                 <figure class="gallery-card">
-                    <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zenji Adventures gallery image' }}">
+                    <img src="{{ photo.display_url }}" alt="{{ photo.title|default:'Zenji Adventures and Safari gallery image' }}">
                     <figcaption><h2>{{ photo.title|default:'Zanzibar experience' }}</h2></figcaption>
                 </figure>
             {% empty %}
