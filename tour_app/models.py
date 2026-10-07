@@ -154,9 +154,8 @@ class TransportBooking(models.Model):
         CANCELLED = 'cancelled', 'Cancelled'
 
     class VehicleType(models.TextChoices):
-        CAR = 'car', 'Private car'
-        VAN = 'van', 'Private van'
-        SUV = 'suv', 'SUV / 4x4'
+        PRIVATE = 'private', 'Private'
+        MINIBUS = 'minibus', 'Minibus'
 
     guest_name = models.CharField(max_length=120)
     guest_email = models.EmailField()
@@ -166,7 +165,7 @@ class TransportBooking(models.Model):
     pickup_date = models.DateField()
     pickup_time = models.TimeField()
     passengers = models.PositiveIntegerField(default=1)
-    vehicle_type = models.CharField(max_length=20, choices=VehicleType.choices, default=VehicleType.CAR)
+    vehicle_type = models.CharField(max_length=20, choices=VehicleType.choices, default=VehicleType.PRIVATE)
     special_requests = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)

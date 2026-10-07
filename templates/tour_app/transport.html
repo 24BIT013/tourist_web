@@ -1,4 +1,5 @@
 {% extends 'tour_app/base.html' %}
+{% load static %}
 
 {% block title %}Transport Services | Zenji Adventures &amp; Safari{% endblock %}
 
@@ -7,7 +8,7 @@
     <div class="container">
         <span class="eyebrow">Zanzibar transport</span>
         <h1>Book a comfortable ride.</h1>
-        <p>Arrange a reliable private transfer for airport arrivals, hotel pickups, tours, and travel anywhere on Zanzibar.</p>
+        <p>Choose a private ride or minibus for airport arrivals, hotel pickups, tours, and travel anywhere on Zanzibar.</p>
     </div>
 </section>
 
@@ -16,6 +17,33 @@
         <div class="transport-copy">
             <h2>Travel on your schedule</h2>
             <p>Tell us where and when you need to go. Our team will confirm your ride and price directly with you.</p>
+            <div class="transport-vehicle-grid" aria-label="Transport options">
+                <label class="package-card transport-vehicle-card">
+                    <input type="radio" name="vehicle_type" value="private" form="transport-request-form" {% if transport_form.vehicle_type.value != 'minibus' %}checked{% endif %} required>
+                    <div class="package-image">
+                        <img src="{% static 'images/alp.png' %}" alt="Private transfer vehicle">
+                        <span class="badge">Private</span>
+                    </div>
+                    <div class="package-content">
+                        <div class="destination-row"><span>Private ride</span><span class="duration">On your schedule</span></div>
+                        <h3>Private transfer</h3>
+                        <p class="package-summary">A comfortable vehicle reserved for you and your group.</p>
+                    </div>
+                </label>
+                <label class="package-card transport-vehicle-card">
+                    <input type="radio" name="vehicle_type" value="minibus" form="transport-request-form" {% if transport_form.vehicle_type.value == 'minibus' %}checked{% endif %}>
+                    <div class="package-image">
+                        <img src="{% static 'images/min.png' %}" alt="Minibus transfer vehicle">
+                        <span class="badge">Minibus</span>
+                    </div>
+                    <div class="package-content">
+                        <div class="destination-row"><span>Group travel</span><span class="duration">More room</span></div>
+                        <h3>Minibus transfer</h3>
+                        <p class="package-summary">An easy option for families, friends, and larger groups.</p>
+                    </div>
+                </label>
+            </div>
+            {% for error in transport_form.vehicle_type.errors %}<small class="field-error transport-vehicle-error">{{ error }}</small>{% endfor %}
             <div class="transport-benefits">
                 <p><strong>Airport transfers</strong><br>Meet-and-greet service from Zanzibar airport.</p>
                 <p><strong>Private drivers</strong><br>Flexible rides for hotels, beaches, and island tours.</p>
@@ -30,16 +58,18 @@
             {% elif transport_notice == 'saved' %}
                 <div class="booking-confirmation booking-confirmation-warning" role="status"><strong>Your request has been saved.</strong><span>Our team can still see it and will contact you.</span></div>
             {% endif %}
-            <form method="post" class="transport-form">
+            <form method="post" class="transport-form" id="transport-request-form">
                 {% csrf_token %}
                 {% if transport_form.errors %}<div class="form-errors" role="alert"><p>Please correct the highlighted details and try again.</p></div>{% endif %}
                 <div class="form-grid">
                     {% for field in transport_form %}
+                        {% if field.name != 'vehicle_type' %}
                         <label class="form-field {% if field.name == 'special_requests' %}form-field-wide{% endif %}">
                             <span>{{ field.label }}</span>
                             {{ field }}
                             {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
                         </label>
+                        {% endif %}
                     {% endfor %}
                 </div>
                 <div class="booking-form-footer"><button class="btn btn-primary" type="submit">Request transport</button></div>
