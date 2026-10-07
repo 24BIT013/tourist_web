@@ -120,6 +120,32 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTotal();
     });
 
+    const transportForm = document.querySelector('#transport-request-form');
+    const selectedVehicleType = document.querySelector('#selected-vehicle-type');
+    if (transportForm && selectedVehicleType) {
+        const vehicleCards = document.querySelectorAll('[data-vehicle-card]');
+        const updateVehicleType = (vehicleType) => {
+            selectedVehicleType.value = vehicleType === 'minibus' ? 'Minibus' : 'Private';
+            vehicleCards.forEach((card) => {
+                card.classList.toggle('is-selected', card.dataset.vehicleCard === vehicleType);
+            });
+        };
+
+        vehicleCards.forEach((card) => {
+            const option = card.querySelector('input[name="vehicle_type"]');
+            if (!option) return;
+
+            card.addEventListener('click', () => {
+                option.checked = true;
+                option.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            option.addEventListener('change', () => {
+                if (option.checked) updateVehicleType(option.value);
+            });
+            if (option.checked) updateVehicleType(option.value);
+        });
+    }
+
     const whatsappWidget = document.querySelector('[data-whatsapp-widget]');
     if (whatsappWidget) {
         const toggleButton = whatsappWidget.querySelector('.whatsapp-fab');

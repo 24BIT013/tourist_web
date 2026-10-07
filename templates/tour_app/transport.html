@@ -18,7 +18,7 @@
             <h2>Travel on your schedule</h2>
             <p>Tell us where and when you need to go. Our team will confirm your ride and price directly with you.</p>
             <div class="transport-vehicle-grid" aria-label="Transport options">
-                <label class="package-card transport-vehicle-card">
+                <label class="package-card transport-vehicle-card" data-vehicle-card="private">
                     <input type="radio" name="vehicle_type" value="private" form="transport-request-form" {% if transport_form.vehicle_type.value != 'minibus' %}checked{% endif %} required>
                     <div class="package-image">
                         <img src="{% static 'images/alp.png' %}" alt="Private transfer vehicle">
@@ -30,7 +30,7 @@
                         <p class="package-summary">A comfortable vehicle reserved for you and your group.</p>
                     </div>
                 </label>
-                <label class="package-card transport-vehicle-card">
+                <label class="package-card transport-vehicle-card" data-vehicle-card="minibus">
                     <input type="radio" name="vehicle_type" value="minibus" form="transport-request-form" {% if transport_form.vehicle_type.value == 'minibus' %}checked{% endif %}>
                     <div class="package-image">
                         <img src="{% static 'images/min.png' %}" alt="Minibus transfer vehicle">
@@ -62,6 +62,10 @@
                 {% csrf_token %}
                 {% if transport_form.errors %}<div class="form-errors" role="alert"><p>Please correct the highlighted details and try again.</p></div>{% endif %}
                 <div class="form-grid">
+                    <label class="form-field">
+                        <span>Vehicle type</span>
+                        <input id="selected-vehicle-type" type="text" value="{% if transport_form.vehicle_type.value == 'minibus' %}Minibus{% else %}Private{% endif %}" readonly aria-live="polite">
+                    </label>
                     {% for field in transport_form %}
                         {% if field.name != 'vehicle_type' %}
                         <label class="form-field {% if field.name == 'special_requests' %}form-field-wide{% endif %}">

@@ -789,6 +789,11 @@ body {
     box-shadow: 0 0 0 4px rgba(242, 187, 66, 0.25);
 }
 
+.transport-vehicle-card.is-selected {
+    border: 3px solid #f2bb42;
+    box-shadow: 0 0 0 4px rgba(242, 187, 66, 0.25);
+}
+
 .transport-vehicle-card input {
     position: absolute;
     opacity: 0;
