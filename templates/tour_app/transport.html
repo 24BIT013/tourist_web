@@ -4,6 +4,53 @@
 {% block title %}Transport Services | Zenji Adventures &amp; Safari{% endblock %}
 
 {% block content %}
+<style>
+    /* Kept with this page so reverse-proxy static caches cannot split the card layout from its markup. */
+    .transport-vehicle-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+    }
+
+    .transport-vehicle-card {
+        display: block;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .transport-vehicle-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(8, 37, 39, 0.22);
+    }
+
+    .transport-vehicle-card:has(input:checked),
+    .transport-vehicle-card.is-selected {
+        border: 3px solid #f2bb42;
+        box-shadow: 0 0 0 4px rgba(242, 187, 66, 0.25);
+    }
+
+    .transport-vehicle-card input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .transport-vehicle-card .package-image { height: 180px; }
+    .transport-vehicle-card .package-content { padding: 18px; }
+    .transport-vehicle-card .package-content h3 { margin: 12px 0 0; color: #17423b; font-size: 1.1rem; }
+    .transport-vehicle-card .package-summary { margin-top: 10px; font-size: 0.84rem; }
+
+    @media (max-width: 600px) {
+        .transport-vehicle-grid { gap: 12px; }
+        .transport-vehicle-card .package-image { height: 130px; }
+        .transport-vehicle-card .package-content { padding: 12px; }
+        .transport-vehicle-card .destination-row { display: block; }
+        .transport-vehicle-card .duration { display: inline-block; margin-top: 5px; }
+    }
+</style>
+
 <section class="transport-hero">
     <div class="container">
         <span class="eyebrow">Zanzibar transport</span>
