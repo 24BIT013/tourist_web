@@ -128,4 +128,29 @@
         </div>
     </div>
 </section>
+
+<script>
+    (() => {
+        const vehicleField = document.querySelector('#selected-vehicle-type');
+        const vehicleCards = document.querySelectorAll('[data-vehicle-card]');
+        if (!vehicleField || !vehicleCards.length) return;
+
+        const chooseVehicle = (vehicleType) => {
+            vehicleField.value = vehicleType === 'minibus' ? 'Minibus' : 'Private';
+            vehicleCards.forEach((card) => {
+                const isSelected = card.dataset.vehicleCard === vehicleType;
+                card.classList.toggle('is-selected', isSelected);
+                const option = card.querySelector('input[name="vehicle_type"]');
+                if (option) option.checked = isSelected;
+            });
+        };
+
+        vehicleCards.forEach((card) => {
+            card.addEventListener('click', () => chooseVehicle(card.dataset.vehicleCard));
+        });
+
+        const selectedOption = document.querySelector('input[name="vehicle_type"]:checked');
+        if (selectedOption) chooseVehicle(selectedOption.value);
+    })();
+</script>
 {% endblock %}
